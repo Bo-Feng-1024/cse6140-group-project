@@ -8,9 +8,9 @@ We have 4 algorithms + 1 report across 3 people. All algorithms can be developed
 
 | Person | Algorithm(s) | Notes |
 |--------|-------------|-------|
-| A | BnB | Hardest algorithm — lower bound design + pruning |
-| B | Approx + LS1 | Approx is straightforward (~30 min), so workload ≈ one algorithm |
-| C | LS2 | Comparable to LS1 |
+| Bo Feng | BnB | Hardest algorithm — lower bound design + pruning |
+| Yihao Zhuang | Approx + LS1 | Approx is straightforward (~30 min), so workload ≈ one algorithm |
+| Congyan Song | LS2 | Comparable to LS1 |
 
 Each person runs experiments and produces data for their own algorithm(s).
 
@@ -20,15 +20,15 @@ Report is worth **36–40 out of 50 points** — the biggest scoring component. 
 
 | Section | Owner |
 |---------|-------|
-| Abstract, Introduction | **Decide today** |
-| Problem Definition | **Decide today** |
-| Related Work | **Decide today** |
-| Algorithm — BnB | A |
-| Algorithm — Approx | B |
-| Algorithm — LS1 | B |
-| Algorithm — LS2 | C |
+| Abstract, Introduction | Bo Feng |
+| Problem Definition | Bo Feng |
+| Related Work | Congyan Song |
+| Algorithm — BnB | Bo Feng |
+| Algorithm — Approx | Yihao Zhuang |
+| Algorithm — LS1 | Yihao Zhuang |
+| Algorithm — LS2 | Congyan Song |
 | Empirical Evaluation (tables, plots) | Shared — each person contributes their own algorithm's results |
-| Discussion, Conclusion | **Decide today** |
+| Discussion, Conclusion | Yihao Zhuang |
 
 ### Optional dependency
 
@@ -50,10 +50,10 @@ All three algorithms (BnB, Approx+LS1, LS2) can be developed **in parallel** —
 
 | Milestone | Target Date |
 |-----------|-------------|
-| All algorithms done | ? |
-| All experiments complete (20 runs × 2 LS × 35 instances) | ? |
-| Report draft | ? |
-| Final submission | **TBD — check Canvas** |
+| All algorithms done | April 25 |
+| All experiments complete (20 runs × 2 LS × 35 instances) | April 26 |
+| Report draft | April 27 |
+| Final submission | April 27/28 |
 
 **Action item:** Confirm the submission deadline on Canvas/Gradescope today.
 
@@ -65,7 +65,7 @@ The code skeleton is already set up at: https://github.com/Bo-Feng-1024/cse6140-
 - Shared interface: every algorithm returns `(cover, trace)` where `cover` is a set of vertex IDs and `trace` is a list of `(timestamp, best_size)` tuples
 - **Data is not in the repo** — each person should download `data.zip` from Canvas and unzip it locally (see README)
 - **Gradescope environment:** Python 3.10.12 — avoid 3.11+ syntax (e.g., `ExceptionGroup`) or libraries not in the standard library
-- Branch strategy: push directly to `main`, or use feature branches + PR? **Decide today.**
+- Branch strategy: push directly to `main`, or use feature branches + PR? **Decide today.** - Let's go feature branches + PR 
 
 ## Current Repo Status
 
