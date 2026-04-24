@@ -30,6 +30,24 @@ python3 mvc.py -inst data/large/large1 -alg LS1 -time 600 -seed 42
 python3 mvc.py -inst data/large/large12 -alg LS2 -time 600 -seed 7
 ```
 
+## Data Setup
+
+The input datasets are **not** included in this repository. Before running, download `data.zip` from Canvas (Assignments → Project) and extract it into the project root:
+
+```bash
+# After downloading data.zip to this directory:
+unzip data.zip
+```
+
+This should create the following structure:
+
+```
+data/
+  test/       # 5 test instances (6–15 vertices)
+  small/      # 18 small instances (25–198 vertices)
+  large/      # 12 large instances (800–22963 vertices)
+```
+
 ## Project Structure
 
 ```
@@ -40,10 +58,10 @@ bnb.py        # Branch and Bound (exact)
 approx.py     # 2-Approximation algorithm
 ls1.py        # Local Search variant 1 (TBD)
 ls2.py        # Local Search variant 2 (TBD)
-data/         # Input datasets (not committed — download from Canvas)
-  test/       #   5 test instances
-  small/      #   18 small instances
-  large/      #   12 large instances
+report/       # ACM sigconf LaTeX report
+  report.tex
+  references.bib
+notes/        # Project handout and Piazza posts
 ```
 
 ## Output Files
