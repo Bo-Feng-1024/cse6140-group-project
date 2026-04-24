@@ -1,7 +1,9 @@
 # CSE6140 Project — Minimum Vertex Cover
 
 ## Team
-- 3 members (TBD — fill in names)
+- Bo Feng (bfeng66@gatech.edu)
+- Congyan Cruise Song (csong326@gatech.edu)
+- Yihao Zhuang (yzhuang80@gatech.edu)
 
 ## Language
 Python 3.10+

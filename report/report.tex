@@ -1,0 +1,95 @@
+\documentclass[sigconf]{acmart}
+
+\AtBeginDocument{%
+  \providecommand\BibTeX{{Bib\TeX}}}
+
+% Remove ACM-specific metadata for course project
+\settopmatter{printacmref=false}
+\renewcommand\footnotetextcopyrightpermission[1]{}
+\pagestyle{plain}
+
+\usepackage{algorithm2e}
+\usepackage{booktabs}
+
+\begin{document}
+
+\title{Minimum Vertex Cover: Branch-and-Bound, Approximation, and Local Search}
+
+\author{Bo Feng}
+\affiliation{\institution{Georgia Institute of Technology}}
+\email{bfeng66@gatech.edu}
+
+\author{Congyan Cruise Song}
+\affiliation{\institution{Georgia Institute of Technology}}
+\email{csong326@gatech.edu}
+
+\author{Yihao Zhuang}
+\affiliation{\institution{Georgia Institute of Technology}}
+\email{yzhuang80@gatech.edu}
+
+\begin{abstract}
+% TODO: Write abstract
+% Short summary of the problem, approaches, and key results.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}
+% Short summary of the problem, your approaches, and the results you obtained.
+
+\section{Problem Definition}
+% Formal definition of Minimum Vertex Cover.
+Given an undirected graph $G = (V, E)$, a \emph{vertex cover} is a subset $C \subseteq V$ such that for every edge $(u, v) \in E$, at least one of $u$ or $v$ belongs to $C$. The \textbf{Minimum Vertex Cover} problem asks to find
+\[
+C^* = \arg\min_{C \subseteq V} |C| \quad \text{subject to} \quad \forall (u,v) \in E,\ u \in C \text{ or } v \in C.
+\]
+
+\section{Related Work}
+% Survey of existing work on MVC: theoretical results, practical algorithms.
+
+\section{Algorithms}
+
+\subsection{Branch and Bound}
+% Detailed description, pseudocode, complexity, design choices.
+% Include: branching strategy, lower bound, upper bound, pruning.
+
+\subsection{Approximation Algorithm}
+% 2-approximation via maximal matching.
+% Include: pseudocode, proof of approximation ratio, complexity.
+
+\subsection{Local Search 1}
+% TODO: Describe chosen LS variant.
+% Include: search framework, neighborhood, acceptance rule, parameters.
+
+\subsection{Local Search 2}
+% TODO: Describe chosen LS variant.
+% Include: how it differs from LS1.
+
+\section{Empirical Evaluation}
+
+\subsection{Experimental Setup}
+% Platform: CPU, RAM, OS, Python version.
+
+\subsection{Comprehensive Results Table}
+% Table with columns: Dataset, BnB (Time, Size, RelErr), Approx/LS1/LS2 (Time, Size, RelErr)
+% Include all small# and large# instances.
+
+\subsection{Qualified Runtime Distributions (QRTDs)}
+% For LS1 and LS2 on large1 and large12.
+% 20 runs per algorithm.
+
+\subsection{Solution Quality Distributions (SQDs)}
+% For LS1 and LS2 on large1 and large12.
+
+\subsection{Box Plots}
+% Running time box plots for LS1 and LS2.
+
+\section{Discussion}
+% Comparative analysis: runtime, solution quality, scalability, theoretical vs. empirical behavior.
+
+\section{Conclusion}
+
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{references}
+
+\end{document}
