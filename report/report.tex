@@ -28,7 +28,7 @@
 \email{yzhuang80@gatech.edu}
 
 \begin{abstract}
-The Minimum Vertex Cover (MVC) problem is a classic NP-complete
+The Minimum Vertex Cover (MVC) problem is an NP-complete
 optimization problem with applications in network monitoring,
 computational biology, and scheduling. We study four algorithmic
 approaches on a benchmark of 35 instances ranging from 6 to
@@ -36,18 +36,17 @@ approaches on a benchmark of 35 instances ranging from 6 to
 LP-relaxation kernelization
 (Nemhauser--Trotter via bipartite matching), a 2-approximation, and
 two local search heuristics (simulated annealing and a second
-variant). The LP kernelization closes the previously catastrophic
-gap on the dense bipartite instances on which the matching-based
+variant). The LP kernelization closes the previously 100\% gap on
+the dense bipartite instances on which the matching-based
 2-approximation is loose by a factor of 2; combined with degree-1
 and degree-2 reductions and a max-degree initial upper bound, BnB
 returns the optimum on all small instances and on most large
 instances within a 60-second cutoff. Local search closes most of
 the residual gap on the largest instances within the 2-second
-budget required by the autograder. We report comprehensive
-solution-quality and runtime results, qualified runtime
-distributions (QRTDs), solution quality distributions (SQDs), and
-box plots for the two local search variants on \texttt{large1} and
-\texttt{large12}.
+budget required by the autograder. We report solution-quality and
+runtime results, qualified runtime distributions (QRTDs), solution
+quality distributions (SQDs), and box plots for the two local
+search variants on \texttt{large1} and \texttt{large12}.
 \end{abstract}
 
 \maketitle
@@ -56,18 +55,16 @@ box plots for the two local search variants on \texttt{large1} and
 The Minimum Vertex Cover (MVC) problem asks for a smallest subset of
 vertices in an undirected graph such that every edge has at least one
 endpoint in the subset. MVC was among the first problems shown to be
-NP-complete~\cite{karp1972reducibility}, and its decision version is
-canonical in textbook treatments of intractability. Beyond its
-theoretical role, MVC abstracts a number of practical problems:
-placing monitors on network links so that every link is observed,
-identifying essential proteins that cover all interactions in a
-biological network, and selecting features that hit every relevant
-data record.
+NP-complete~\cite{karp1972reducibility}. MVC also abstracts practical
+problems: placing monitors on network links so that every link is
+observed, identifying essential proteins that cover all interactions
+in a biological network, and selecting features that hit every
+relevant data record.
 
 Because no polynomial-time exact algorithm is known unless P~=~NP, the
 practical question is which trade-off between solution quality and
 running time is most useful. We implement and empirically compare four
-algorithms, each illustrating a distinct paradigm:
+algorithms:
 (i)~a Branch-and-Bound solver (BnB) producing certified optimal
 solutions when given enough time;
 (ii)~a 2-approximation algorithm based on maximal matching, which is
@@ -81,14 +78,6 @@ All four share a common driver \texttt{mvc.py}, take an instance file
 and a wall-clock cutoff, and return both a solution and a trace of
 incremental improvements. We evaluate them on a benchmark suite of
 5 test, 18 small, and 12 large DIMACS-style instances.
-
-The remainder of the paper is organized as follows.
-Section~\ref{sec:problem} formalizes MVC and states the input/output
-conventions. Section~\ref{sec:related} surveys prior work.
-Section~\ref{sec:algorithms} describes each algorithm's design, with
-pseudocode and complexity analysis. Section~\ref{sec:eval} reports the
-empirical comparison. Section~\ref{sec:discussion} discusses what the
-results imply, and Section~\ref{sec:conclusion} concludes.
 
 \section{Problem Definition}
 \label{sec:problem}
@@ -111,8 +100,8 @@ NP-hard.
 \textsc{Maximum Independent Set}: $C \subseteq V$ is a vertex cover of
 $G$ iff $V \setminus C$ is an independent set, so
 $|C^*| = n - \alpha(G)$ where $\alpha(G)$ is the independence number.
-By a classical observation, any maximal matching $M \subseteq E$
-satisfies $|M| \le |C^*| \le 2|M|$: every vertex cover must include at
+Any maximal matching $M \subseteq E$ satisfies
+$|M| \le |C^*| \le 2|M|$: every vertex cover must include at
 least one endpoint of each matched edge, and the set of all matched
 endpoints is itself a feasible cover. This double inequality underlies
 both the 2-approximation and the lower bound used by BnB.
@@ -166,9 +155,8 @@ of every matched edge:
 \]
 We prune the subtree whenever $|C| + |M(G[A])| \ge |C^{\!*}|$.
 
-A strictly tighter root-level bound is given by the LP relaxation of
-MVC. We solve this LP exactly in polynomial time via the classical
-Nemhauser--Trotter
+The LP relaxation of MVC gives a strictly tighter root-level bound.
+We solve this LP exactly in polynomial time via the Nemhauser--Trotter
 construction~\cite{nemhauser1975vertex,hochbaum1982approximation}:
 build the bipartite double cover $B(G)$ on vertex set
 $V \times \{L, R\}$ with edge $(u_L, v_R)$ for each edge $(u, v)$ of
@@ -186,8 +174,8 @@ Nemhauser--Trotter persistence guarantees that some optimal cover
 $C^*_{\text{opt}}$ contains all of $V_1$ and avoids all of $V_0$;
 we therefore force $V_1$ into $C$ at the root, drop $V_0$ from $A$,
 and only branch over $V_{1/2}$. On the dense bipartite instance
-\texttt{large6} where the LP is fully integral, this preprocessing
-alone returns the optimum without any branching.
+\texttt{large6} where the LP is fully integral, the kernel returns
+the optimum directly.
 
 \paragraph{Reductions.} Before bounding and branching, we exhaustively
 apply three local reductions at each node:
@@ -289,7 +277,7 @@ exhausts its budget (\texttt{large12}).
   \caption{BnB anytime convergence on four representative instances.
     Solid step traces show the best cover size found so far; dashed
     horizontal lines mark the reference value. \texttt{large6} is
-    closed by the LP kernel preprocessing alone (single trace point);
+    closed by the LP kernel preprocessing (single trace point);
     \texttt{large1} converges to the optimum within $0.1\,$s;
     \texttt{large5} and \texttt{large12} hit the 60\,s cutoff close
     to but not at optimum.}
