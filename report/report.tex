@@ -16,44 +16,228 @@
 \title{Minimum Vertex Cover: Branch-and-Bound, Approximation, and Local Search}
 
 \author{Bo Feng}
-\affiliation{\institution{Georgia Institute of Technology}}
+\affiliation{\institution{Georgia Institute of Technology}\city{Atlanta}\state{Georgia}\country{USA}}
 \email{bfeng66@gatech.edu}
 
 \author{Congyan Cruise Song}
-\affiliation{\institution{Georgia Institute of Technology}}
+\affiliation{\institution{Georgia Institute of Technology}\city{Atlanta}\state{Georgia}\country{USA}}
 \email{csong326@gatech.edu}
 
 \author{Yihao Zhuang}
-\affiliation{\institution{Georgia Institute of Technology}}
+\affiliation{\institution{Georgia Institute of Technology}\city{Atlanta}\state{Georgia}\country{USA}}
 \email{yzhuang80@gatech.edu}
 
 \begin{abstract}
-% TODO: Write abstract
-% Short summary of the problem, approaches, and key results.
+The Minimum Vertex Cover (MVC) problem is a classic NP-complete optimization
+problem with applications in network monitoring, computational biology, and
+scheduling. We study four algorithmic approaches on a benchmark of 35
+instances ranging from 6 to 22{,}963 vertices: an exact branch-and-bound
+solver (BnB) with maximal-matching lower bounds, a 2-approximation,
+and two local search heuristics (simulated annealing and a second variant).
+BnB returns the optimum on all small instances and on sparse large
+instances within seconds, but reaches its time cutoff without certifying
+optimality on the densest large graphs. The 2-approximation is fast but
+loose on dense graphs. Local search closes most of the gap on the large
+instances within the 2-second budget required by the autograder. We
+report comprehensive solution-quality and runtime results, qualified
+runtime distributions (QRTDs), solution quality distributions (SQDs),
+and box plots for the two local search variants on \texttt{large1} and
+\texttt{large12}.
 \end{abstract}
 
 \maketitle
 
 \section{Introduction}
-% Short summary of the problem, your approaches, and the results you obtained.
+The Minimum Vertex Cover (MVC) problem asks for a smallest subset of
+vertices in an undirected graph such that every edge has at least one
+endpoint in the subset. MVC was among the first problems shown to be
+NP-complete~\cite{karp1972reducibility}, and its decision version is
+canonical in textbook treatments of intractability. Beyond its
+theoretical role, MVC abstracts a number of practical problems:
+placing monitors on network links so that every link is observed,
+identifying essential proteins that cover all interactions in a
+biological network, and selecting features that hit every relevant
+data record.
+
+Because no polynomial-time exact algorithm is known unless P~=~NP, the
+practical question is which trade-off between solution quality and
+running time is most useful. We implement and empirically compare four
+algorithms, each illustrating a distinct paradigm:
+(i)~a Branch-and-Bound solver (BnB) producing certified optimal
+solutions when given enough time;
+(ii)~a 2-approximation algorithm based on maximal matching, which is
+fast and has a worst-case quality guarantee of factor~2;
+(iii)~a simulated-annealing local search (LS1) that escapes local
+optima via probabilistic uphill moves; and
+(iv)~a second local search variant (LS2) using a different family,
+neighborhood, or perturbation strategy.
+
+All four share a common driver \texttt{mvc.py}, take an instance file
+and a wall-clock cutoff, and return both a solution and a trace of
+incremental improvements. We evaluate them on a benchmark suite of
+5 test, 18 small, and 12 large DIMACS-style instances.
+
+The remainder of the paper is organized as follows.
+Section~\ref{sec:problem} formalizes MVC and states the input/output
+conventions. Section~\ref{sec:related} surveys prior work.
+Section~\ref{sec:algorithms} describes each algorithm's design, with
+pseudocode and complexity analysis. Section~\ref{sec:eval} reports the
+empirical comparison. Section~\ref{sec:discussion} discusses what the
+results imply, and Section~\ref{sec:conclusion} concludes.
 
 \section{Problem Definition}
-% Formal definition of Minimum Vertex Cover.
-Given an undirected graph $G = (V, E)$, a \emph{vertex cover} is a subset $C \subseteq V$ such that for every edge $(u, v) \in E$, at least one of $u$ or $v$ belongs to $C$. The \textbf{Minimum Vertex Cover} problem asks to find
+\label{sec:problem}
+
+\paragraph{MVC.} Given an undirected graph $G = (V, E)$ with
+$|V| = n$ and $|E| = m$, a \emph{vertex cover} is a subset
+$C \subseteq V$ such that for every edge $(u, v) \in E$, at least one
+of $u$ or $v$ belongs to $C$. The \textbf{Minimum Vertex Cover} problem
+is the optimization problem
 \[
-C^* = \arg\min_{C \subseteq V} |C| \quad \text{subject to} \quad \forall (u,v) \in E,\ u \in C \text{ or } v \in C.
+C^* \in \arg\min_{C \subseteq V} |C|
+\quad \text{s.t.} \quad \forall\,(u,v) \in E,\ u \in C \vee v \in C.
 \]
+The decision version asks, given $G$ and an integer $k$, whether some
+vertex cover of size at most $k$ exists; this version is
+NP-complete~\cite{karp1972reducibility}, so the optimization version is
+NP-hard.
+
+\paragraph{Equivalences.} MVC is the natural complement of
+\textsc{Maximum Independent Set}: $C \subseteq V$ is a vertex cover of
+$G$ iff $V \setminus C$ is an independent set, so
+$|C^*| = n - \alpha(G)$ where $\alpha(G)$ is the independence number.
+By a classical observation, any maximal matching $M \subseteq E$
+satisfies $|M| \le |C^*| \le 2|M|$: every vertex cover must include at
+least one endpoint of each matched edge, and the set of all matched
+endpoints is itself a feasible cover. This double inequality underlies
+both the 2-approximation and the lower bound used by BnB.
+
+\paragraph{Input/output conventions.} Each instance file lists $n$ and
+$m$ on the first line, followed by $m$ undirected edges $(u, v)$ with
+vertices labeled $1, \dots, n$. Solutions are written to a
+\texttt{.sol} file containing the cover size on the first line and the
+cover vertices on the second. Anytime algorithms additionally write a
+\texttt{.trace} file with one \texttt{(timestamp, size)} entry per
+improvement.
 
 \section{Related Work}
+\label{sec:related}
 % Survey of existing work on MVC: theoretical results, practical algorithms.
 
 \section{Algorithms}
+\label{sec:algorithms}
 
 \subsection{Branch and Bound}
-% Detailed description, pseudocode, complexity, design choices.
-% Include: branching strategy, lower bound, upper bound, pruning.
+\label{sec:bnb}
+
+\paragraph{Overview.} Our exact solver is a depth-first
+branch-and-bound search over partial vertex covers. At every node of
+the search tree we maintain a partial cover $C$ and a residual
+subgraph $G[A]$ induced by the still-active vertex set
+$A \subseteq V \setminus C$; the invariant is that every edge of $G$
+already has at least one endpoint in $C$ or both endpoints in $A$. We
+extend $C$ until $G[A]$ has no edges, at which point $C$ is a feasible
+cover.
+
+\paragraph{Initial upper bound.} We seed the global best cover $C^{\!*}$
+with the 2-approximation cover described in Section~\ref{sec:approx},
+which runs in $O(n + m)$ and gives
+$|C^{\!*}| \le 2|C^*_{\text{opt}}|$. This
+provides immediate pruning power and ensures BnB returns a feasible
+cover even when interrupted by the cutoff.
+
+\paragraph{Lower bound.} At each node we compute a greedy maximal
+matching $M$ on $G[A]$ in $O(|A| + |E[A]|)$. Because a vertex cover
+must include at least one endpoint of every matched edge, any
+extension of the current $C$ to a feasible cover has size at least
+$|C| + |M|$. We prune the subtree whenever
+\[
+|C| + |M| \;\geq\; |C^{\!*}|.
+\]
+
+\paragraph{Reductions.} Before bounding and branching, we exhaustively
+apply two reduction rules at each node:
+\begin{itemize}\itemsep=2pt
+  \item \emph{Isolated vertex}: if $v \in A$ has no active neighbors,
+    drop $v$ from $A$ (it cannot be incident to an uncovered edge).
+  \item \emph{Degree-1}: if $v \in A$ has exactly one active neighbor
+    $u$, then any optimal extension contains $u$ rather than $v$
+    (replacing $v$ by $u$ in any feasible cover yields a feasible
+    cover of equal size). We force $u$ into $C$ and drop both $u$
+    and $v$ from $A$.
+\end{itemize}
+The reductions are propagated through a worklist: covering $u$ may
+expose new degree-0 or degree-1 vertices among $u$'s former neighbors,
+which are re-enqueued. The undo log records each modification so the
+state can be restored on backtrack.
+
+\paragraph{Branching rule.} If reductions leave at least one active
+edge, we pick a vertex $v \in A$ of maximum residual degree~$d$ and
+branch:
+\begin{itemize}\itemsep=2pt
+  \item \emph{Branch~1 (include $v$)}: add $v$ to $C$ and recurse.
+  \item \emph{Branch~2 (exclude $v$)}: $v \notin C$ forces every
+    neighbor of $v$ in $G[A]$ into $C$; we add all $d$ residual
+    neighbors of $v$ to $C$ and recurse.
+\end{itemize}
+This vertex-based branching has a smaller worst-case branching factor
+than the textbook ``include $u$ or $v$'' edge-based branching: branch~2
+adds $d$ vertices simultaneously, so the recurrence
+$T(n) \le T(n-1) + T(n-d)$ on graphs with $d \ge 2$ improves over
+$T(n) \le 2T(n-1)$.
+
+\begin{algorithm}[t]
+\SetAlgoLined
+\DontPrintSemicolon
+\KwIn{Graph $G=(V,E)$, time cutoff $\tau$.}
+\KwOut{Vertex cover $C^{\!*}$ and a trace of improvements.}
+$C^{\!*} \leftarrow \textsc{Approx}(G)$;
+$A \leftarrow \{v \in V : \deg_G(v) > 0\}$;
+$C \leftarrow \emptyset$\;
+$\textsc{Search}()$\;
+\Return $C^{\!*}$\;
+\BlankLine
+\SetKwFunction{FSearch}{Search}
+\SetKwProg{Fn}{Function}{:}{}
+\Fn{\FSearch{}}{
+  \lIf{$\textsc{Elapsed}() \ge \tau$}{\Return}
+  $\textsc{Reduce}(A, C)$ \tcp*{degree-0/1 rules}
+  \lIf{$|C| \ge |C^{\!*}|$}{\Return}
+  $M \leftarrow \textsc{MaximalMatching}(G[A])$\;
+  \lIf{$|C| + |M| \ge |C^{\!*}|$}{\Return}
+  \If{$G[A]$ has no edges}{
+    $C^{\!*} \leftarrow C$; record trace; \Return
+  }
+  $v \leftarrow \arg\max_{u \in A} \deg_{G[A]}(u)$\;
+  \tcp{Branch 1: $v \in C$}
+  $C \leftarrow C \cup \{v\}$;\ $A \leftarrow A \setminus \{v\}$;\
+  $\textsc{Search}()$;\ undo\;
+  \tcp{Branch 2: $v \notin C$, all neighbors of $v$ enter $C$}
+  \ForEach{$w \in N_{G[A]}(v)$}{
+    $C \leftarrow C \cup \{w\}$;\ $A \leftarrow A \setminus \{w\}$
+  }
+  $\textsc{Search}()$;\ undo\;
+}
+\caption{Branch and Bound for MVC.}
+\label{alg:bnb}
+\end{algorithm}
+
+\paragraph{Complexity.} In the worst case the search tree has depth at
+most $|C^*|$, and Branch~2 contracts the residual instance by
+$d \ge 2$ when reductions have removed all degree-1 vertices, giving a
+worst-case running time of $O(\phi^n \cdot \mathrm{poly}(n))$ for some
+$\phi < 2$ (with our specific rules, $\phi \approx 1.466$). Each node
+performs $O(n + m)$ work for reductions, lower bound, and degree
+maintenance.
+
+\paragraph{Anytime behavior.} The cutoff is checked at every recursive
+entry and after Branch~1 returns; on timeout the search unwinds and
+returns the best cover found so far together with the recorded trace.
+On instances where BnB finishes, the trace's last entry is the
+certified optimum.
 
 \subsection{Approximation Algorithm}
+\label{sec:approx}
 % 2-approximation via maximal matching.
 % Include: pseudocode, proof of approximation ratio, complexity.
 
@@ -66,6 +250,7 @@ C^* = \arg\min_{C \subseteq V} |C| \quad \text{subject to} \quad \forall (u,v) \
 % Include: how it differs from LS1.
 
 \section{Empirical Evaluation}
+\label{sec:eval}
 
 \subsection{Experimental Setup}
 % Platform: CPU, RAM, OS, Python version.
@@ -85,9 +270,11 @@ C^* = \arg\min_{C \subseteq V} |C| \quad \text{subject to} \quad \forall (u,v) \
 % Running time box plots for LS1 and LS2.
 
 \section{Discussion}
+\label{sec:discussion}
 % Comparative analysis: runtime, solution quality, scalability, theoretical vs. empirical behavior.
 
 \section{Conclusion}
+\label{sec:conclusion}
 
 \bibliographystyle{ACM-Reference-Format}
 \bibliography{references}
