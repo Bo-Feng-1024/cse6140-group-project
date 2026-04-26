@@ -12,17 +12,15 @@ def approx_vertex_cover(graph, cutoff):
     """
     timer = Timer(cutoff)
 
-    # TODO: implement the 2-approximation algorithm
-    # Algorithm (from lecture):
-    #   C = empty set
-    #   E' = copy of E
-    #   while E' is not empty:
-    #       pick any edge (u,v) from E'
-    #       add u and v to C
-    #       remove all edges incident to u or v from E'
-    #   return C
-
     cover = set()
+    edges = [(min(u, v), max(u, v)) for (u, v) in graph.edges]
 
+    for u, v in edges:
+        if timer.is_time_up():
+            break
+
+        if u not in cover and v not in cover:
+            cover.add(u)
+            cover.add(v)
     trace = [(timer.elapsed(), len(cover))]
     return cover, trace

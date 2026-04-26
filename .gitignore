@@ -18,3 +18,13 @@ output/
 *.synctex.gz
 report/report.pdf
 report/sample-sigconf.tex
+
+# uv
+.venv/
+.uv/
+.python-version
+
+# others
+spring2026_project.pdf
+Makefile
+test.py
