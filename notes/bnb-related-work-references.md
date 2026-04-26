@@ -57,13 +57,13 @@ citation key matching what I will add (or have added) to
    baseline most modern MVC papers compare against. Useful context
    for the LS1 / LS2 sections.*
 
-8. **Cai 2015 — "Balance between complexity and quality: local search for minimum vertex cover in massive graphs" (FastVC)**
+8. **Cai 2015 — "Local Search for Minimum Vertex Cover in Massive Graphs" (FastVC, IJCAI 2015)**
    `cai2015fastvc`
    *Massive-scale variant of NuMVC. Demonstrates how careful
    neighborhood structures scale local search to graphs with
    millions of edges.*
 
-9. **Hespe, Lamm, Schorr, Strash, Schulz 2020 / "WeGotYouCovered" (DIMACS PACE 2019 winner)**
+9. **Hespe, Lamm, Schulz, Strash 2020 / "WeGotYouCovered" (PACE 2019 vertex cover track winner)**
    `hespe2020wegotyoucovered`
    *Combines kernelization, branch-and-reduce, and reduction stacks
    for the PACE Vertex Cover challenge. Currently the strongest
