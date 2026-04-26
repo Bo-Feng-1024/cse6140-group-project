@@ -28,20 +28,25 @@
 \email{yzhuang80@gatech.edu}
 
 \begin{abstract}
-The Minimum Vertex Cover (MVC) problem is a classic NP-complete optimization
-problem with applications in network monitoring, computational biology, and
-scheduling. We study four algorithmic approaches on a benchmark of 35
-instances ranging from 6 to 22{,}963 vertices: an exact branch-and-bound
-solver (BnB) with maximal-matching lower bounds, a 2-approximation,
-and two local search heuristics (simulated annealing and a second variant).
-BnB returns the optimum on all small instances and on sparse large
-instances within seconds, but reaches its time cutoff without certifying
-optimality on the densest large graphs. The 2-approximation is fast but
-loose on dense graphs. Local search closes most of the gap on the large
-instances within the 2-second budget required by the autograder. We
-report comprehensive solution-quality and runtime results, qualified
-runtime distributions (QRTDs), solution quality distributions (SQDs),
-and box plots for the two local search variants on \texttt{large1} and
+The Minimum Vertex Cover (MVC) problem is a classic NP-complete
+optimization problem with applications in network monitoring,
+computational biology, and scheduling. We study four algorithmic
+approaches on a benchmark of 35 instances ranging from 6 to
+22{,}963 vertices: an exact branch-and-bound solver (BnB) using
+LP-relaxation kernelization
+(Nemhauser--Trotter via bipartite matching), a 2-approximation, and
+two local search heuristics (simulated annealing and a second
+variant). The LP kernelization closes the previously catastrophic
+gap on the dense bipartite instances on which the matching-based
+2-approximation is loose by a factor of 2; combined with degree-1
+and degree-2 reductions and a max-degree initial upper bound, BnB
+returns the optimum on all small instances and on most large
+instances within a 60-second cutoff. Local search closes most of
+the residual gap on the largest instances within the 2-second
+budget required by the autograder. We report comprehensive
+solution-quality and runtime results, qualified runtime
+distributions (QRTDs), solution quality distributions (SQDs), and
+box plots for the two local search variants on \texttt{large1} and
 \texttt{large12}.
 \end{abstract}
 
@@ -139,37 +144,72 @@ already has at least one endpoint in $C$ or both endpoints in $A$. We
 extend $C$ until $G[A]$ has no edges, at which point $C$ is a feasible
 cover.
 
-\paragraph{Initial upper bound.} We seed the global best cover $C^{\!*}$
-with the 2-approximation cover described in Section~\ref{sec:approx},
-which runs in $O(n + m)$ and gives
-$|C^{\!*}| \le 2|C^*_{\text{opt}}|$. This
-provides immediate pruning power and ensures BnB returns a feasible
-cover even when interrupted by the cutoff.
+\paragraph{Initial upper bound.} We seed the global best cover
+$C^{\!*}$ with the smaller of two heuristic covers: the
+matching-based 2-approximation of Section~\ref{sec:approx}
+(running in $O(n + m)$ and giving the worst-case factor-2 bound) and
+a max-residual-degree greedy cover (repeatedly add the vertex with
+the largest remaining degree, removing all incident edges). The
+matching-based 2-approximation can return a cover of size up to $n$
+on dense graphs (e.g., it returns the entire vertex set on the
+constructed dense bipartite instances \texttt{large5} and
+\texttt{large6}), where the max-degree greedy is typically far
+tighter; on sparse real-world graphs the two heuristics are
+comparable and we keep whichever is smaller.
 
-\paragraph{Lower bound.} At each node we compute a greedy maximal
-matching $M$ on $G[A]$ in $O(|A| + |E[A]|)$. Because a vertex cover
-must include at least one endpoint of every matched edge, any
-extension of the current $C$ to a feasible cover has size at least
-$|C| + |M|$. We prune the subtree whenever
+\paragraph{Lower bound and LP kernelization.} The simplest useful
+lower bound is the size of any maximal matching $M$ on the residual
+subgraph $G[A]$, since every cover must include at least one endpoint
+of every matched edge:
 \[
-|C| + |M| \;\geq\; |C^{\!*}|.
+|C| + |M(G[A])| \;\le\; |C^*_{\text{opt}}|.
 \]
+We prune the subtree whenever $|C| + |M(G[A])| \ge |C^{\!*}|$.
+
+A strictly tighter root-level bound is given by the LP relaxation of
+MVC. We solve this LP exactly in polynomial time via the classical
+Nemhauser--Trotter
+construction~\cite{nemhauser1975vertex,hochbaum1982approximation}:
+build the bipartite double cover $B(G)$ on vertex set
+$V \times \{L, R\}$ with edge $(u_L, v_R)$ for each edge $(u, v)$ of
+$G$, compute a maximum matching of $B(G)$ in $O(m\sqrt{n})$ via
+Hopcroft--Karp~\cite{hopcroft1973n52}, and recover a minimum vertex
+cover of $B(G)$ via K\H{o}nig's theorem. The half-integral LP solution
+$x^* \in \{0, 1/2, 1\}^V$ obtained this way satisfies
+$\sum_v x^*_v = \mathrm{LP\text{-}VC}(G)$ and induces the partition
+\[
+V_1 = \{v : x^*_v = 1\},\ \
+V_0 = \{v : x^*_v = 0\},\ \
+V_{1/2} = \{v : x^*_v = 1/2\}.
+\]
+Nemhauser--Trotter persistence guarantees that some optimal cover
+$C^*_{\text{opt}}$ contains all of $V_1$ and avoids all of $V_0$;
+we therefore force $V_1$ into $C$ at the root, drop $V_0$ from $A$,
+and only branch over $V_{1/2}$. On the dense bipartite instance
+\texttt{large6} where the LP is fully integral, this preprocessing
+alone returns the optimum without any branching.
 
 \paragraph{Reductions.} Before bounding and branching, we exhaustively
-apply two reduction rules at each node:
+apply three local reductions at each node:
 \begin{itemize}\itemsep=2pt
   \item \emph{Isolated vertex}: if $v \in A$ has no active neighbors,
-    drop $v$ from $A$ (it cannot be incident to an uncovered edge).
+    drop $v$ from $A$.
   \item \emph{Degree-1}: if $v \in A$ has exactly one active neighbor
-    $u$, then any optimal extension contains $u$ rather than $v$
-    (replacing $v$ by $u$ in any feasible cover yields a feasible
-    cover of equal size). We force $u$ into $C$ and drop both $u$
-    and $v$ from $A$.
+    $u$, force $u$ into $C$ and drop both. (For any feasible cover
+    containing $v$, replacing $v$ by $u$ yields a feasible cover of
+    equal size.)
+  \item \emph{Degree-2 triangle}: if $v \in A$ has exactly two active
+    neighbors $u, w$ that are themselves adjacent, force both $u$ and
+    $w$ into $C$ and drop $v$. (At least two of $\{u, v, w\}$ are in
+    any cover; the choice $\{u, w\}$ dominates other size-two
+    selections.)
 \end{itemize}
-The reductions are propagated through a worklist: covering $u$ may
-expose new degree-0 or degree-1 vertices among $u$'s former neighbors,
-which are re-enqueued. The undo log records each modification so the
-state can be restored on backtrack.
+The full Niedermeier degree-2 \emph{folding}
+rule~\cite{niedermeier2006invitation} for non-triangle cases is
+left as future work. Reductions are propagated through a worklist:
+modifying any vertex re-enqueues its former neighbors, and an undo
+log records each modification so the state can be restored on
+backtrack.
 
 \paragraph{Branching rule.} If reductions leave at least one active
 edge, we pick a vertex $v \in A$ of maximum residual degree~$d$ and
@@ -191,9 +231,11 @@ $T(n) \le 2T(n-1)$.
 \DontPrintSemicolon
 \KwIn{Graph $G=(V,E)$, time cutoff $\tau$.}
 \KwOut{Vertex cover $C^{\!*}$ and a trace of improvements.}
-$C^{\!*} \leftarrow \textsc{Approx}(G)$;
-$A \leftarrow \{v \in V : \deg_G(v) > 0\}$;
-$C \leftarrow \emptyset$\;
+$C^{\!*} \leftarrow \arg\min(|\textsc{Approx}(G)|, |\textsc{GreedyMaxDeg}(G)|)$\;
+$(V_1, V_0, V_{1/2}) \leftarrow \textsc{NTKernel}(G)$
+  \tcp*{Hopcroft--Karp on $B(G)$ + K\H{o}nig}
+\lIf{$V_{1/2} = \emptyset$}{\Return $V_1$}
+$C \leftarrow V_1$; \ $A \leftarrow V_{1/2}$\;
 $\textsc{Search}()$\;
 \Return $C^{\!*}$\;
 \BlankLine
@@ -201,7 +243,7 @@ $\textsc{Search}()$\;
 \SetKwProg{Fn}{Function}{:}{}
 \Fn{\FSearch{}}{
   \lIf{$\textsc{Elapsed}() \ge \tau$}{\Return}
-  $\textsc{Reduce}(A, C)$ \tcp*{degree-0/1 rules}
+  $\textsc{Reduce}(A, C)$ \tcp*{deg-0 / deg-1 / deg-2-triangle}
   \lIf{$|C| \ge |C^{\!*}|$}{\Return}
   $M \leftarrow \textsc{MaximalMatching}(G[A])$\;
   \lIf{$|C| + |M| \ge |C^{\!*}|$}{\Return}
@@ -234,7 +276,25 @@ maintenance.
 entry and after Branch~1 returns; on timeout the search unwinds and
 returns the best cover found so far together with the recorded trace.
 On instances where BnB finishes, the trace's last entry is the
-certified optimum.
+certified optimum. Figure~\ref{fig:bnb-convergence} shows the
+incremental improvement on four representative regimes: a sparse
+real-world graph (\texttt{large1}), two constructed dense bipartite
+instances on which the LP kernel is tight (\texttt{large5},
+\texttt{large6}), and a dense DIMACS benchmark on which BnB
+exhausts its budget (\texttt{large12}).
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{../results/bnb/bnb_convergence.pdf}
+  \caption{BnB anytime convergence on four representative instances.
+    Solid step traces show the best cover size found so far; dashed
+    horizontal lines mark the reference value. \texttt{large6} is
+    closed by the LP kernel preprocessing alone (single trace point);
+    \texttt{large1} converges to the optimum within $0.1\,$s;
+    \texttt{large5} and \texttt{large12} hit the 60\,s cutoff close
+    to but not at optimum.}
+  \label{fig:bnb-convergence}
+\end{figure}
 
 \subsection{Approximation Algorithm}
 \label{sec:approx}
