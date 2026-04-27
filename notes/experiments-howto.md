@@ -8,12 +8,12 @@ runtimes in that table are comparable.
 ## Run
 
 ```bash
-# all 4 algorithms, ~10 hours
+# all 4 algorithms
 python3 results/run_all.py
 
 # subset
-python3 results/run_all.py --algs BnB Approx     # ~2h
-python3 results/run_all.py --algs LS1 LS2        # ~8h
+python3 results/run_all.py --algs BnB Approx
+python3 results/run_all.py --algs LS1 LS2
 python3 results/run_all.py --algs qrtd           # 600s × 20 seeds on large1/large12
 python3 results/run_all.py --summary             # rebuild CSV without rerunning
 ```
