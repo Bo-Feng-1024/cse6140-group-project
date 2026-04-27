@@ -70,13 +70,18 @@ def local_search_1(graph, cutoff, seed):
     trace = [(timer.elapsed(), len(best_cover))]
 
     # SA hyperparameters
-    T = len(current) * 0.5  # Initial temperature, scaled to solution size
+    initial_T = len(current) * 0.5
+    T = initial_T  # Initial temperature, scaled to solution size
     T_min = 0.01  # Minimum temperature threshold
     alpha = 0.995  # Cooling rate (multiply T by alpha each step)
     steps_per_temp = max(10, graph.n // 10)  # Iterations per temperature level
 
     # Main loop
-    while not timer.is_time_up() and T > T_min:
+    while not timer.is_time_up():
+        if T <= T_min: # Reheat
+            T = initial_T
+            current = set(best_cover)
+
         for _ in range(steps_per_temp):
             if timer.is_time_up():
                 break
