@@ -492,6 +492,45 @@ intersection of two fit parents, LS2 identifies "backbone" vertices
 that are common to high-quality covers, a global perspective that 
 single-point searches typically lack.
 
+\begin{algorithm}[t]
+\SetAlgoLined
+\DontPrintSemicolon
+\KwIn{Graph $G=(V,E)$, cutoff $\tau$, seed $s$.}
+\KwOut{Vertex cover $C^*$ and a trace of improvements.}
+$\textsc{Seed}(s)$;\quad $P \leftarrow \max(10, \min(40, |V|/2))$;\quad $p_m \leftarrow 0.1$\;
+$E \leftarrow \max(1, \lfloor P/10 \rfloor)$;\quad $k \leftarrow 3$;\quad $trace \leftarrow []$\;
+$C_{init} \leftarrow \textsc{ApproxVertexCover}(G)$\;
+$C^* \leftarrow C_{init}$;\quad $Pop \leftarrow [C_{init}]$\;
+\For{$i = 1$ \KwTo $P-1$}{
+    $C_{rand} \leftarrow \textsc{Repair}(G, \emptyset)$\;
+    $Pop.\text{append}(C_{rand})$\;
+    \lIf{$|C_{rand}| < |C^*|$}{$C^* \leftarrow C_{rand}$}
+}
+append $(\textsc{Elapsed}(), |C^*|)$ to $trace$\;
+\While{$\textsc{Elapsed}() < \tau$}{
+    $Pop \leftarrow \text{sort } Pop \text{ by cardinality ascending}$\;
+    $NewPop \leftarrow Pop[1 \dots E]$\;
+    \While{$|NewPop| < P$}{
+        \lIf{$\textsc{Elapsed}() \ge \tau$}{break}
+        $p_1 \leftarrow \textsc{TournamentSelect}(Pop, k)$\;
+        $p_2 \leftarrow \textsc{TournamentSelect}(Pop, k)$\;
+        $C_{child} \leftarrow p_1 \cap p_2$\;
+        \If{$C_{child} \neq \emptyset$}{
+            $M \leftarrow \text{sample}(C_{child}, \lfloor |C_{child}| \cdot p_m \rfloor)$\;
+            $C_{child} \leftarrow C_{child} \setminus M$\;
+        }
+        $C_{child} \leftarrow \textsc{Repair}(G, C_{child})$\;
+        $NewPop.\text{append}(C_{child})$\;
+        \If{$|C_{child}| < |C^*|$}{
+            $C^* \leftarrow C_{child}$;\quad append $(\textsc{Elapsed}(), |C^*|)$ to $trace$
+        }
+    }
+    $Pop \leftarrow NewPop$\;
+}
+\Return $C^*,\; trace$\;
+\caption{Genetic Algorithm for MVC.}
+\label{alg:ls2}
+\end{algorithm}
 \section{Empirical Evaluation}
 \label{sec:eval}
 
