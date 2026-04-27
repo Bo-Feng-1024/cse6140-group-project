@@ -116,7 +116,73 @@ improvement.
 
 \section{Related Work}
 \label{sec:related}
-% Survey of existing work on MVC: theoretical results, practical algorithms.
+The Minimum Vertex Cover (MVC) problem is a fundamental combinatorial
+optimization challenge and one of Karp's original 21 NP-complete
+problems \cite{karp1972reducibility}. Due to its widespread
+applications in network security, scheduling, and bioinformatics, MVC
+has been extensively studied across theoretical computer science and
+operations research. The literature can be broadly categorized into
+exact algorithms, approximation methods, and heuristic approaches,
+with recent advancements heavily leveraging automated reasoning and
+machine learning.
+
+From a theoretical standpoint, finding a vertex cover of optimal size
+is computationally intractable for large, dense graphs. While a simple
+greedy approach that selects both endpoints of an uncovered edge
+guarantees a 2-approximation factor \cite{gavril1974}, achieving a
+significantly better approximation ratio is notoriously difficult.
+Dinur and Safra \cite{dinur2005approximating} proved that MVC is
+NP-hard to approximate within a factor of $1.3606$, and under the
+Unique Games Conjecture, Khot and Regev \cite{khot2008vertex}
+demonstrated that it is hard to approximate within any constant factor
+better than 2. Other rigorous approaches involve linear programming
+(LP) relaxations and primal-dual methods, though these also
+fundamentally hit the integrality gap of 2
+\cite{hochbaum1982approximation}.
+
+To solve MVC exactly, traditional Branch-and-Bound (BnB) algorithms
+are heavily utilized, relying on tight upper bounds from heuristics
+and lower bounds from LP relaxations to prune the search space. In the
+realm of parameterized complexity, Fixed-Parameter Tractable (FPT)
+algorithms have achieved state-of-the-art status for exact solutions.
+Specifically, kernelization techniques can reduce any graph to a
+problem kernel of size at most $2k$ (where $k$ is the vertex cover
+size) in polynomial time, using structural theorems like
+Nemhauser-Trotter \cite{nemhauser1975vertex}. More recently,
+significant methodological novelty has been introduced by formulating
+MVC as a Boolean Satisfiability (SAT) or Maximum Satisfiability
+(MaxSAT) problem. By encoding the graph constraints into propositional
+logic, researchers can leverage highly optimized modern SAT and SMT
+solvers to find exact solutions or tight bounds much faster than
+native BnB approaches on specific graph topologies \cite{li2020maxsat}.
+
+While simulated annealing and standard genetic algorithms provide
+robust baseline metaheuristics, the state-of-the-art in local search
+for MVC is currently dominated by specialized vertex weighting
+techniques. Algorithms like NuMVC \cite{cai2013numvc} and FastVC
+\cite{cai2015fastvc} represent significant leaps in performance. NuMVC
+introduces a two-stage exchange strategy and an edge weighting
+mechanism that dynamically penalizes local optima. FastVC pairs this
+with an aggressive initial construction phase and a massive
+neighborhood search, allowing it to scale to massive real-world graphs
+with millions of edges.
+
+The most recent methodological shift in solving MVC involves deep
+learning, specifically utilizing Graph Neural Networks (GNNs) to guide
+combinatorial optimization \cite{khalil2017learning}. A cutting-edge
+example of this synergy is the GCNIVC algorithm proposed by Zhu et al.
+\cite{zhu_optimizing_mvc}. GCNIVC leverages a Graph Convolutional
+Network (GCN) to capture the global topological structure of a graph,
+generating a highly optimized initial candidate solution. Rather than
+relying on simplistic initialization, this machine-learning-assisted
+inference is paired with a highly specialized local search. The
+authors introduce a novel heuristic using three vertex containers and
+track "double-covered edges" (dc-edges) to intelligently guide the
+addition and removal of vertices based on edge attributes. By bridging
+the gap between data-driven neural inference and rigorous local search
+operations, frameworks like GCNIVC demonstrate superior accuracy and
+efficiency over traditional state-of-the-art heuristics on massive
+benchmark datasets.
 
 \section{Algorithms}
 \label{sec:algorithms}
@@ -380,8 +446,51 @@ $steps \leftarrow \max(10, \lfloor |V|/10 \rfloor)$;\quad $trace \leftarrow [(\t
 
 
 \subsection{Local Search 2}
-% TODO: Describe chosen LS variant.
-% Include: how it differs from LS1.
+\paragraph{Search Framework.} Local Search 2 implements a Genetic 
+Algorithm (GA) designed to evolve a population of feasible vertex 
+covers. The algorithm maintains a population size $P$ (scaled 
+between 10 and 40 based on graph size) and iteratively produces new 
+generations through selection, crossover, and mutation. Unlike the 
+point-based trajectory of LS1, this framework exploits the global 
+graph structure by maintaining multiple candidate solutions 
+simultaneously, preventing the search from becoming trapped in 
+narrow local optima.
+
+\paragraph{Neighborhood and Recombination.} The search navigates the 
+solution space primarily through an \emph{Intersection Crossover} 
+operator. Offspring are created by taking the intersection of two 
+parent sets, $C_{child} = C_{p1} \cap C_{p2}$. This operation 
+inherits vertices that both parents agree are important. To 
+introduce stochastic diversity (mutation), we randomly drop a 
+fraction of vertices (10\%) from the resulting child. Because 
+intersection and mutation often result in an invalid cover, we 
+employ a \emph{Randomized Greedy Repair} step. This heuristic 
+identifies uncovered edges and iteratively adds the vertex with the 
+highest residual degree, using random tie-breaking to ensure 
+explorative diversity.
+
+\paragraph{Acceptance Rule.} We use tournament selection with a size 
+of $k=3$ to select parents, ensuring a consistent selection 
+pressure toward smaller covers. The population transition follows an 
+elitist model: the top $10\%$ of the current population is 
+preserved automatically, while the remainder is replaced by new 
+offspring. This ensures that the global best solution is never lost 
+while allowing the population to evolve toward the optimum.
+
+\paragraph{Parameters.} The implementation dynamically adjusts 
+population size based on $n$, utilizes a mutation rate of $0.1$, 
+and maintains an elite set of size $\max(1, P/10)$. The randomized 
+greedy repair is triggered for every offspring to maintain the 
+feasibility invariant.
+
+\paragraph{Comparison to LS1.} The fundamental difference between 
+LS2 and LS1 is the mechanism of information exchange. LS1 (SA) 
+relies on local bit-flips and probabilistic uphill moves to escape 
+local minima. In contrast, LS2 uses crossover to combine successful 
+structural features from different individuals. By using the 
+intersection of two fit parents, LS2 identifies "backbone" vertices 
+that are common to high-quality covers, a global perspective that 
+single-point searches typically lack.
 
 \section{Empirical Evaluation}
 \label{sec:eval}
