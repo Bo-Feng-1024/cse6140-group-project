@@ -558,7 +558,7 @@ Table~\ref{tab:results} summarizes the experimental Results for Vertex Cover Alg
 
 \begin{table*}[t]
 \centering
-\small % 减小字号以适应更多列
+\small
 \caption{Experimental Results for Vertex Cover Algorithms.} 
 \label{tab:results}
 \begin{tabular}{l|ccc|ccc|ccc}
@@ -606,15 +606,68 @@ large12 & 60.00 & 1439 & 0.00 & 0.18 & 1500.0 & 0.04 & 60.01 & 1441.60 & 0.00 \\
 \end{tabular}
 \end{table*}
 
+
+
 \subsection{Qualified Runtime Distributions (QRTDs)}
-% For LS1 and LS2 on large1 and large12.
+% QRTD for LS1 on large1 and large12.
 % 20 runs per algorithm.
+Figures \ref{fig:qrtd-large1} and \ref{fig:qrtd-large12} show the Qualified Runtime Distributions (QRTDs) for the \textbf{Local Search 1 (LS1)} algorithm. These plots show the percentage of the 20 independent runs that successfully reach different target relative qualities ($q^*$) over time on two different examples: \texttt{large1} (a sparse real-world network) and \texttt{large12} (a dense benchmark graph). The figures show that LS1 behaves differently depending on the graph topology, but it always works toward the required targets within the $600\,\text{s}$ cutoff.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{../results/ls1/large1_ls1_qrtd.png}
+  \caption{Qualified Runtime Distribution (QRTD) for \textbf{LS1} on the \texttt{large1} instance across 20 runs. The step traces show the proportion of runs reaching target relative qualities ($q^* = 1.0\%, 3.0\%, 5.0\%$) as a function of running time.}
+  \label{fig:qrtd-large1}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{../results/ls1/large12_ls1_qrtd.png}
+  \caption{Qualified Runtime Distribution (QRTD) for \textbf{LS1} on the \texttt{large12} instance across 20 runs. The curves illustrate the runtime required to hit the same relative error thresholds on a dense benchmark graph.}
+  \label{fig:qrtd-large12}
+\end{figure}
+
 
 \subsection{Solution Quality Distributions (SQDs)}
-% For LS1 and LS2 on large1 and large12.
+% SQD for LS1 on large1 and large12.
+
+Also, the Solution Quality Distributions (SQDs) in Figure~\ref{fig:sqd-large1} and Figure~\ref{fig:sqd-large12} test how well the \textbf{LS1} algorithm works when there are strict time limits. The plots show that LS1 gets very competitive relative errors even when the runtime is set to $60\,\text{s}$, $300\,\text{s}$, and $600\,\text{s}$. When it gets more time to compute, it makes steady, incremental improvements.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{../results/ls1/large1_ls1_sqd.png}
+  \caption{Solution Quality Distribution (SQD) for \textbf{LS1} on the \texttt{large1} instance. The traces denote the cumulative probability of achieving a specific relative error given fixed time limits ($60\,\text{s}, 300\,\text{s}, 600\,\text{s}$).}
+  \label{fig:sqd-large1}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{../results/ls1/large12_ls1_sqd.png}
+  \caption{Solution Quality Distribution (SQD) for \textbf{LS1} on the \texttt{large12} instance. The distribution highlights LS1's anytime performance and its ability to refine the solution quality within bounded time on a dense graph.}
+  \label{fig:sqd-large12}
+\end{figure}
+
 
 \subsection{Box Plots}
-% Running time box plots for LS1 and LS2.
+% Running time box plots for LS1 on large1 and large12.
+
+Lastly, Figures~\ref{fig:boxplot-large1} and~\ref{fig:boxplot-large12} show running time box plots for \textbf{LS1} to help us understand the differences in running time across the 20 independent runs. The interquartile ranges show how random the local search process is. The compactness of the boxes indicates that the duration for LS1 to attain particular relative qualities is relatively constant, although the variance is significantly influenced by the rigor of the target $q^*$.
+
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{../results/ls1/large1_ls1_boxplot.png}
+  \caption{Running time box plots for \textbf{LS1} on the \texttt{large1} instance. The boxes visualize the distribution of times strictly required to reach the target relative qualities ($q^*$) across all 20 independent runs. The red horizontal lines indicate the median time.}
+  \label{fig:boxplot-large1}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{../results/ls1/large12_ls1_boxplot.png}
+  \caption{Running time box plots for \textbf{LS1} on the \texttt{large12} instance, demonstrating the distribution and variance of solving times for different target qualities.}
+  \label{fig:boxplot-large12}
+\end{figure}
+
 
 \section{Discussion}
 \label{sec:discussion}
