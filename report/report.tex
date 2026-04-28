@@ -535,11 +535,76 @@ append $(\textsc{Elapsed}(), |C^*|)$ to $trace$\;
 \label{sec:eval}
 
 \subsection{Experimental Setup}
-% Platform: CPU, RAM, OS, Python version.
+The experiments were implemented in Python 3.10.12 using the Visual Studio Code IDE within an Ubuntu 24.04.4 LTS (WSL 2) environment. Table~\ref{tab:hardware} summarizes the hardware specifications used for the evaluation.
+
+\begin{table}[h]
+\centering
+\caption{Hardware specifications of the experimental workstation.}
+\label{tab:hardware}
+\begin{tabular}{ll}
+\hline
+\textbf{Component} & \textbf{Specification} \\ \hline
+CPU & Intel Core Ultra 7 265 \\
+RAM & 47 GB \\
+GPU & NVIDIA RTX 2000 Ada Generation \\
+OS & Ubuntu 24.04.4 LTS (WSL 2) \\ \hline
+\end{tabular}
+\end{table}
 
 \subsection{Comprehensive Results Table}
 % Table with columns: Dataset, BnB (Time, Size, RelErr), Approx/LS1/LS2 (Time, Size, RelErr)
 % Include all small# and large# instances.
+Table~\ref{tab:results} summarizes the experimental Results for Vertex Cover Algorithms.
+
+\begin{table*}[t]
+\centering
+\small % 减小字号以适应更多列
+\caption{Experimental Results for Vertex Cover Algorithms.} 
+\label{tab:results}
+\begin{tabular}{l|ccc|ccc|ccc}
+\toprule
+ & \multicolumn{3}{c|}{Branch and Bound} & \multicolumn{3}{c|}{Approx} & \multicolumn{3}{c}{LS1} \\
+\cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10}
+Instance & Time(s) & Size & RelErr & Time(s) & Size & RelErr & Time(s) & Size & RelErr \\
+\midrule
+test1 & 0.00 & 2 & 0.00 & 0.00 & 2.0 & 0.00 & 2.00 & 2.00 & 0.00 \\
+test2 & 0.00 & 3 & 0.00 & 0.00 & 6.0 & 1.00 & 2.00 & 3.00 & 0.00 \\
+test3 & 0.00 & 5 & 0.00 & 0.00 & 8.0 & 0.60 & 2.00 & 5.00 & 0.00 \\
+test4 & 0.00 & 7 & 0.00 & 0.00 & 12.0 & 0.71 & 2.00 & 7.00 & 0.00 \\
+test5 & 0.00 & 7 & 0.00 & 0.00 & 10.0 & 0.43 & 2.00 & 7.00 & 0.00 \\
+small1 & 0.00 & 21 & 0.00 & 0.00 & 24.0 & 0.14 & 2.00 & 21.00 & 0.00 \\
+small2 & 0.00 & 20 & 0.00 & 0.00 & 24.0 & 0.20 & 2.00 & 20.00 & 0.00 \\
+small3 & 0.00 & 20 & 0.00 & 0.00 & 24.0 & 0.20 & 2.00 & 20.00 & 0.00 \\
+small4 & 0.00 & 20 & 0.00 & 0.00 & 24.0 & 0.20 & 2.00 & 20.00 & 0.00 \\
+small5 & 0.00 & 21 & 0.00 & 0.00 & 24.0 & 0.14 & 2.00 & 21.00 & 0.00 \\
+small6 & 0.00 & 20 & 0.00 & 0.00 & 24.0 & 0.20 & 2.00 & 20.00 & 0.00 \\
+small7 & 0.00 & 20 & 0.00 & 0.00 & 24.0 & 0.20 & 2.00 & 20.00 & 0.00 \\
+small8 & 0.00 & 19 & 0.00 & 0.00 & 24.0 & 0.26 & 2.00 & 19.00 & 0.00 \\
+small9 & 0.00 & 21 & 0.00 & 0.00 & 24.0 & 0.14 & 2.00 & 21.00 & 0.00 \\
+small10 & 0.00 & 21 & 0.00 & 0.00 & 24.0 & 0.14 & 2.00 & 21.00 & 0.00 \\
+small11 & 0.00 & 21 & 0.00 & 0.00 & 24.0 & 0.14 & 2.00 & 21.00 & 0.00 \\
+small12 & 0.00 & 20 & 0.00 & 0.00 & 24.0 & 0.20 & 2.00 & 20.00 & 0.00 \\
+small13 & 0.00 & 21 & 0.00 & 0.00 & 24.0 & 0.14 & 2.00 & 21.00 & 0.00 \\
+small14 & 0.00 & 21 & 0.00 & 0.00 & 24.0 & 0.14 & 2.00 & 21.00 & 0.00 \\
+small15 & 0.00 & 21 & 0.00 & 0.00 & 24.0 & 0.14 & 2.00 & 21.00 & 0.00 \\
+small16 & 0.00 & 20 & 0.00 & 0.00 & 24.0 & 0.20 & 2.00 & 20.00 & 0.00 \\
+small17 & 0.00 & 14 & 0.00 & 0.00 & 22.0 & 0.57 & 2.00 & 14.00 & 0.00 \\
+small18 & 9.06 & 158 & 0.00 & 0.00 & 194.0 & 0.23 & 2.00 & 158.00 & 0.00 \\
+large1 & 0.09 & 3303 & 0.00 & 0.02 & 5684.0 & 0.72 & 60.00 & 3303.15 & 0.00 \\
+large2 & 2.41 & 594 & 0.00 & 0.00 & 814.0 & 0.37 & 60.00 & 594.00 & 0.00 \\
+large3 & 21.55 & 2203 & 0.00 & 0.00 & 3736.0 & 0.70 & 60.00 & 2203.40 & 0.00 \\
+large4 & 60.00 & 3926 & 0.00 & 0.00 & 5678.0 & 0.45 & 60.00 & 3926.05 & 0.00 \\
+large5 & 60.01 & 1008 & 0.01 & 0.18 & 2000.0 & 1.00 & 60.01 & 1000.00 & 0.00 \\
+large6 & 0.96 & 980 & 0.00 & 0.18 & 1960.0 & 1.00 & 60.01 & 980.00 & 0.00 \\
+large7 & 60.00 & 1938 & 0.01 & 0.06 & 1990.0 & 0.04 & 60.00 & 1929.00 & 0.01 \\
+large8 & 60.00 & 1818 & 0.02 & 0.04 & 1972.0 & 0.10 & 60.00 & 1803.45 & 0.01 \\
+large9 & 60.00 & 791 & 0.00 & 0.07 & 800.0 & 0.01 & 60.00 & 791.45 & 0.00 \\
+large10 & 60.00 & 933 & 0.00 & 0.09 & 1000.0 & 0.07 & 60.00 & 933.30 & 0.00 \\
+large11 & 60.00 & 990 & 0.00 & 0.12 & 1000.0 & 0.01 & 60.00 & 990.85 & 0.00 \\
+large12 & 60.00 & 1439 & 0.00 & 0.18 & 1500.0 & 0.04 & 60.01 & 1441.60 & 0.00 \\
+\bottomrule
+\end{tabular}
+\end{table*}
 
 \subsection{Qualified Runtime Distributions (QRTDs)}
 % For LS1 and LS2 on large1 and large12.
