@@ -627,6 +627,22 @@ Figures \ref{fig:qrtd-large1} and \ref{fig:qrtd-large12} show the Qualified Runt
   \label{fig:qrtd-large12}
 \end{figure}
 
+Similarly, Figures \ref{fig:qrtd-ls2-large1} and \ref{fig:qrtd-ls2-large12} present the QRTDs for the Local Search 2 (LS2) algorithm. For the \texttt{large1} instance, LS2 shows rapid and stable convergence across all targets. In contrast, the \texttt{large12} results exhibit a sharp step-function behavior. This occurs because the computational cost of the randomized repair step on such a dense graph is high, meaning the algorithm often meets multiple quality targets simultaneously upon the completion of its first evolutionary iteration. While LS2 quickly reaches the 5\% and 10\% targets, the 1\% target remains a challenge within the constrained execution window for dense topologies.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{../results/ls2/large1_ls2_qrtd.png}
+  \caption{Qualified Runtime Distribution (QRTD) for LS2 on the \texttt{large1} instance across 20 runs. The algorithm demonstrates efficient and consistent solving times for various $q^*$ targets on sparse graphs.}
+  \label{fig:qrtd-ls2-large1}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{../results/ls2/large12_ls2_qrtd.png}
+  \caption{Qualified Runtime Distribution (QRTD) for LS2 on the \texttt{large12} instance across 20 runs. The single vertical step indicates that targets are reached upon the first successful population repair, highlighting the iteration complexity on dense graphs.}
+  \label{fig:qrtd-ls2-large12}
+\end{figure}
+
 
 \subsection{Solution Quality Distributions (SQDs)}
 % SQD for LS1 on large1 and large12.
@@ -647,6 +663,21 @@ Also, the Solution Quality Distributions (SQDs) in Figure~\ref{fig:sqd-large1} a
   \label{fig:sqd-large12}
 \end{figure}
 
+The SQDs for the Local Search 2 (LS2) algorithm are provided in Figures~\ref{fig:sqd-ls2-large1} and~\ref{fig:sqd-ls2-large12}. For the \texttt{large1} instance, we observe a clear "anytime" behavior where the distribution shifts toward lower relative error as the time limit increases from 10\,s to 60\,s. On the dense \texttt{large12} graph, the overlapping nature of the distributions suggests that the initial population repair is the dominant factor in solution quality; while the algorithm finds strong solutions quickly, the massive size of the search space results in slower incremental improvements compared to the sparse case.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{../results/ls2/large1_ls2_sqd.png}
+  \caption{Solution Quality Distribution (SQD) for LS2 on the \texttt{large1} instance. These curves illustrate the cumulative probability of achieving specific error targets under varied time constraints.}
+  \label{fig:sqd-ls2-large1}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{../results/ls2/large12_ls2_sqd.png}
+  \caption{Solution Quality Distribution (SQD) for LS2 on the \texttt{large12} instance. The plots show the trade-off between runtime and quality on a dense benchmark where iteration speed is lower.}
+  \label{fig:sqd-ls2-large12}
+\end{figure}
 
 \subsection{Box Plots}
 % Running time box plots for LS1 on large1 and large12.
@@ -666,6 +697,22 @@ Lastly, Figures~\ref{fig:boxplot-large1} and~\ref{fig:boxplot-large12} show runn
   \includegraphics[width=\linewidth]{../results/ls1/large12_ls1_boxplot.png}
   \caption{Running time box plots for \textbf{LS1} on the \texttt{large12} instance, demonstrating the distribution and variance of solving times for different target qualities.}
   \label{fig:boxplot-large12}
+\end{figure}
+
+The running time box plots for the LS2 algorithm are shown in Figures~\ref{fig:boxplot-ls2-large1} and~\ref{fig:boxplot-ls2-large12}. For the sparse \texttt{large1} graph, the boxes are extremely tight, showing that the genetic algorithm consistently reaches quality targets at nearly identical timestamps across all seeds. For the \texttt{large12} instance, the box plots for 5\% and 10\% targets reveal a median solving time of approximately 1.22\,s. The outliers observed in the dense case are a result of the stochastic nature of the randomized repair heuristic, which may occasionally require additional time to resolve high-degree vertices into a valid cover.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{../results/ls2/large1_ls2_boxplot.png}
+  \caption{Running time box plots for LS2 on the \texttt{large1} instance. The high stability across runs reflects the consistent performance of the population-based approach on sparse topologies.}
+  \label{fig:boxplot-ls2-large1}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{../results/ls2/large12_ls2_boxplot.png}
+  \caption{Running time box plots for LS2 on the \texttt{large12} instance. The results illustrate the distribution of time required to satisfy specific quality thresholds on a high-density benchmark.}
+  \label{fig:boxplot-ls2-large12}
 \end{figure}
 
 
