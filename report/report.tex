@@ -28,25 +28,25 @@
 \email{yzhuang80@gatech.edu}
 
 \begin{abstract}
-The Minimum Vertex Cover (MVC) problem is an NP-complete
-optimization problem with applications in network monitoring,
-computational biology, and scheduling. We study four algorithmic
-approaches on a benchmark of 35 instances ranging from 6 to
-22{,}963 vertices: an exact branch-and-bound solver (BnB) using
-LP-relaxation kernelization
-(Nemhauser--Trotter via bipartite matching), a 2-approximation, and
-two local search heuristics (simulated annealing and a second
-variant). The LP kernelization closes the previously 100\% gap on
-the dense bipartite instances on which the matching-based
-2-approximation is loose by a factor of 2; combined with degree-1
-and degree-2 reductions and a max-degree initial upper bound, BnB
-returns the optimum on all small instances and on most large
-instances within a 60-second cutoff. Local search closes most of
-the residual gap on the largest instances within the 2-second
-budget required by the autograder. We report solution-quality and
-runtime results, qualified runtime distributions (QRTDs), solution
-quality distributions (SQDs), and box plots for the two local
-search variants on \texttt{large1} and \texttt{large12}.
+  The Minimum Vertex Cover (MVC) problem is an NP-complete
+  optimization problem with applications in network monitoring,
+  computational biology, and scheduling. We study four algorithmic
+  approaches on a benchmark of 35 instances ranging from 6 to
+  22{,}963 vertices: an exact branch-and-bound solver (BnB) using
+  LP-relaxation kernelization
+  (Nemhauser--Trotter via bipartite matching), a 2-approximation, and
+  two local search heuristics (simulated annealing and a second
+  variant). The LP kernelization closes the previously 100\% gap on
+  the dense bipartite instances on which the matching-based
+  2-approximation is loose by a factor of 2; combined with degree-1
+  and degree-2 reductions and a max-degree initial upper bound, BnB
+  returns the optimum on all small instances and on most large
+  instances within a 60-second cutoff. Local search closes most of
+  the residual gap on the largest instances within the 2-second
+  budget required by the autograder. We report solution-quality and
+  runtime results, qualified runtime distributions (QRTDs), solution
+  quality distributions (SQDs), and box plots for the two local
+  search variants on \texttt{large1} and \texttt{large12}.
 \end{abstract}
 
 \maketitle
@@ -88,8 +88,8 @@ $C \subseteq V$ such that for every edge $(u, v) \in E$, at least one
 of $u$ or $v$ belongs to $C$. The \textbf{Minimum Vertex Cover} problem
 is the optimization problem
 \[
-C^* \in \arg\min_{C \subseteq V} |C|
-\quad \text{s.t.} \quad \forall\,(u,v) \in E,\ u \in C \vee v \in C.
+  C^* \in \arg\min_{C \subseteq V} |C|
+  \quad \text{s.t.} \quad \forall\,(u,v) \in E,\ u \in C \vee v \in C.
 \]
 The decision version asks, given $G$ and an integer $k$, whether some
 vertex cover of size at most $k$ exists; this version is
@@ -217,7 +217,7 @@ lower bound is the size of any maximal matching $M$ on the residual
 subgraph $G[A]$, since every cover must include at least one endpoint
 of every matched edge:
 \[
-|C| + |M(G[A])| \;\le\; |C^*_{\text{opt}}|.
+  |C| + |M(G[A])| \;\le\; |C^*_{\text{opt}}|.
 \]
 We prune the subtree whenever $|C| + |M(G[A])| \ge |C^{\!*}|$.
 
@@ -232,9 +232,9 @@ cover of $B(G)$ via K\H{o}nig's theorem. The half-integral LP solution
 $x^* \in \{0, 1/2, 1\}^V$ obtained this way satisfies
 $\sum_v x^*_v = \mathrm{LP\text{-}VC}(G)$ and induces the partition
 \[
-V_1 = \{v : x^*_v = 1\},\ \
-V_0 = \{v : x^*_v = 0\},\ \
-V_{1/2} = \{v : x^*_v = 1/2\}.
+  V_1 = \{v : x^*_v = 1\},\ \
+  V_0 = \{v : x^*_v = 0\},\ \
+  V_{1/2} = \{v : x^*_v = 1/2\}.
 \]
 Nemhauser--Trotter persistence guarantees that some optimal cover
 $C^*_{\text{opt}}$ contains all of $V_1$ and avoids all of $V_0$;
@@ -247,16 +247,16 @@ the optimum directly.
 apply three local reductions at each node:
 \begin{itemize}\itemsep=2pt
   \item \emph{Isolated vertex}: if $v \in A$ has no active neighbors,
-    drop $v$ from $A$.
+        drop $v$ from $A$.
   \item \emph{Degree-1}: if $v \in A$ has exactly one active neighbor
-    $u$, force $u$ into $C$ and drop both. (For any feasible cover
-    containing $v$, replacing $v$ by $u$ yields a feasible cover of
-    equal size.)
+        $u$, force $u$ into $C$ and drop both. (For any feasible cover
+        containing $v$, replacing $v$ by $u$ yields a feasible cover of
+        equal size.)
   \item \emph{Degree-2 triangle}: if $v \in A$ has exactly two active
-    neighbors $u, w$ that are themselves adjacent, force both $u$ and
-    $w$ into $C$ and drop $v$. (At least two of $\{u, v, w\}$ are in
-    any cover; the choice $\{u, w\}$ dominates other size-two
-    selections.)
+        neighbors $u, w$ that are themselves adjacent, force both $u$ and
+        $w$ into $C$ and drop $v$. (At least two of $\{u, v, w\}$ are in
+        any cover; the choice $\{u, w\}$ dominates other size-two
+        selections.)
 \end{itemize}
 The full Niedermeier degree-2 \emph{folding}
 rule~\cite{niedermeier2006invitation} for non-triangle cases is
@@ -271,8 +271,8 @@ branch:
 \begin{itemize}\itemsep=2pt
   \item \emph{Branch~1 (include $v$)}: add $v$ to $C$ and recurse.
   \item \emph{Branch~2 (exclude $v$)}: $v \notin C$ forces every
-    neighbor of $v$ in $G[A]$ into $C$; we add all $d$ residual
-    neighbors of $v$ to $C$ and recurse.
+        neighbor of $v$ in $G[A]$ into $C$; we add all $d$ residual
+        neighbors of $v$ to $C$ and recurse.
 \end{itemize}
 This vertex-based branching has a smaller worst-case branching factor
 than the textbook ``include $u$ or $v$'' edge-based branching: branch~2
@@ -281,21 +281,21 @@ $T(n) \le T(n-1) + T(n-d)$ on graphs with $d \ge 2$ improves over
 $T(n) \le 2T(n-1)$.
 
 \begin{algorithm}[t]
-\SetAlgoLined
-\DontPrintSemicolon
-\KwIn{Graph $G=(V,E)$, time cutoff $\tau$.}
-\KwOut{Vertex cover $C^{\!*}$ and a trace of improvements.}
-$C^{\!*} \leftarrow \arg\min(|\textsc{Approx}(G)|, |\textsc{GreedyMaxDeg}(G)|)$\;
-$(V_1, V_0, V_{1/2}) \leftarrow \textsc{NTKernel}(G)$
+  \SetAlgoLined
+  \DontPrintSemicolon
+  \KwIn{Graph $G=(V,E)$, time cutoff $\tau$.}
+  \KwOut{Vertex cover $C^{\!*}$ and a trace of improvements.}
+  $C^{\!*} \leftarrow \arg\min(|\textsc{Approx}(G)|, |\textsc{GreedyMaxDeg}(G)|)$\;
+  $(V_1, V_0, V_{1/2}) \leftarrow \textsc{NTKernel}(G)$
   \tcp*{Hopcroft--Karp on $B(G)$ + K\H{o}nig}
-\lIf{$V_{1/2} = \emptyset$}{\Return $V_1$}
-$C \leftarrow V_1$; \ $A \leftarrow V_{1/2}$\;
-$\textsc{Search}()$\;
-\Return $C^{\!*}$\;
-\BlankLine
-\SetKwFunction{FSearch}{Search}
-\SetKwProg{Fn}{Function}{:}{}
-\Fn{\FSearch{}}{
+  \lIf{$V_{1/2} = \emptyset$}{\Return $V_1$}
+  $C \leftarrow V_1$; \ $A \leftarrow V_{1/2}$\;
+  $\textsc{Search}()$\;
+  \Return $C^{\!*}$\;
+  \BlankLine
+  \SetKwFunction{FSearch}{Search}
+  \SetKwProg{Fn}{Function}{:}{}
+  \Fn{\FSearch{}}{
   \lIf{$\textsc{Elapsed}() \ge \tau$}{\Return}
   $\textsc{Reduce}(A, C)$ \tcp*{deg-0 / deg-1 / deg-2-triangle}
   \lIf{$|C| \ge |C^{\!*}|$}{\Return}
@@ -313,9 +313,9 @@ $\textsc{Search}()$\;
     $C \leftarrow C \cup \{w\}$;\ $A \leftarrow A \setminus \{w\}$
   }
   $\textsc{Search}()$;\ undo\;
-}
-\caption{Branch and Bound for MVC.}
-\label{alg:bnb}
+  }
+  \caption{Branch and Bound for MVC.}
+  \label{alg:bnb}
 \end{algorithm}
 
 \paragraph{Complexity.} In the worst case the search tree has depth at
@@ -353,183 +353,183 @@ exhausts its budget (\texttt{large12}).
 \subsection{Approximation Algorithm}
 \label{sec:approx}
 
-\paragraph{Overview.} 
+\paragraph{Overview.}
 We used the classic greedy edge-picking strategy to meet the need for an algorithm with a theoretical guarantee. The algorithm picks an arbitrary uncovered edge $e = (u, v)$ from the graph over and over again. It then adds both of its endpoints, $u$ and $v$, to the vertex cover $C$ and implicitly marks all edges that connect to $u$ and $v$ as covered. This process keeps going until there are no more uncovered edges.
 
-\paragraph{Approximation Guarantee.} 
+\paragraph{Approximation Guarantee.}
 This method gives a 2-approximation in the worst case. The algorithm picks edges that make a maximal matching $M$ because it only picks an edge if neither of its endpoints is already in $C$. A valid vertex cover must have at least one endpoint for every edge in $M$. The edges in $M$ don't share any vertices, so the smallest size of the optimal vertex cover $|C^*_{\text{opt}}|$ is $|M|$. Our algorithm adds exactly two vertices for each edge in the matching, so the cover size is exactly $2|M|$. So, we can be sure that $|C| \le 2|C^*_{\text{opt}}|$.
 
-\paragraph{Complexity and Design Choices.} 
-We used a simple boolean array to make sure that this subroutine runs as quickly as possible. This way, it can work as a standalone solver for the \texttt{large} datasets and as an upper-bound initializer for Branch-and-Bound. Instead of removing edges from a residual graph on the fly, we go through the original edge list only once. We check our boolean array in $O(1)$ time for each edge to see if either endpoint is already covered. We add them to $C$ and update the array if both are not covered. This makes sure that the time complexity stays at $O(n + m)$. The graph takes up $O(n + m)$ of space, and the boolean array and output set take up $O(n)$ of space. 
+\paragraph{Complexity and Design Choices.}
+We used a simple boolean array to make sure that this subroutine runs as quickly as possible. This way, it can work as a standalone solver for the \texttt{large} datasets and as an upper-bound initializer for Branch-and-Bound. Instead of removing edges from a residual graph on the fly, we go through the original edge list only once. We check our boolean array in $O(1)$ time for each edge to see if either endpoint is already covered. We add them to $C$ and update the array if both are not covered. This makes sure that the time complexity stays at $O(n + m)$. The graph takes up $O(n + m)$ of space, and the boolean array and output set take up $O(n)$ of space.
 
 \begin{algorithm}[ht]
-\SetAlgoLined
-\DontPrintSemicolon
-\KwIn{Graph $G=(V,E)$, time cutoff $\tau$ (unused, bounded by $O(n+m)$)}
-\KwOut{A valid vertex cover $C$ guaranteeing $|C| \le 2|C^*_{\text{opt}}|$}
-$C \leftarrow \emptyset$\;
-$\text{covered}[v] \leftarrow \text{False}$ for all $v \in V$\;
-\ForEach{edge $(u, v) \in E$}{
-  \If{\textbf{not} $\text{covered}[u]$ \textbf{and not} $\text{covered}[v]$}{
-    $C \leftarrow C \cup \{u, v\}$\;
-    $\text{covered}[u] \leftarrow \text{True}$\;
-    $\text{covered}[v] \leftarrow \text{True}$\;
+  \SetAlgoLined
+  \DontPrintSemicolon
+  \KwIn{Graph $G=(V,E)$, time cutoff $\tau$ (unused, bounded by $O(n+m)$)}
+  \KwOut{A valid vertex cover $C$ guaranteeing $|C| \le 2|C^*_{\text{opt}}|$}
+  $C \leftarrow \emptyset$\;
+  $\text{covered}[v] \leftarrow \text{False}$ for all $v \in V$\;
+  \ForEach{edge $(u, v) \in E$}{
+    \If{\textbf{not} $\text{covered}[u]$ \textbf{and not} $\text{covered}[v]$}{
+      $C \leftarrow C \cup \{u, v\}$\;
+      $\text{covered}[u] \leftarrow \text{True}$\;
+      $\text{covered}[v] \leftarrow \text{True}$\;
+    }
   }
-}
-\Return $C$\;
-\caption{Greedy 2-Approximation for MVC.}
-\label{alg:approx}
+  \Return $C$\;
+  \caption{Greedy 2-Approximation for MVC.}
+  \label{alg:approx}
 \end{algorithm}
 
 \subsection{Local Search 1: Simulated Annealing}
 \label{sec:ls1}
 
-\paragraph{Overview.} 
+\paragraph{Overview.}
 For our first local search algorithm we implemented the Simulated Annealing (SA). We restrict the search space to \emph{feasible} vertex covers, so that the algorithm can never generate an infeasible solution. Instead of a penalty function for uncovered edges, each proposed move breaks the cover temporarily and is immediately repaired back to feasibility.
 
 
-\paragraph{Initialization and Search Space.} 
+\paragraph{Initialization and Search Space.}
 The initial state for the algorithm is initialized using the $O(n+m)$ 2-approximation algorithm of Section~\ref{sec:approx}. This ensures that we begin in a reasonably good region of the search space, rather than from the trivial all-vertices cover.
 
-\paragraph{Neighborhood and Repair Strategy.} 
+\paragraph{Neighborhood and Repair Strategy.}
 A candidate solution is generated by a two-stage perturb-and-repair process:
 \begin{enumerate}\itemsep=2pt
-    \item \emph{Perturb}: We randomly delete $k$ vertices from the current cover $C$. An important design choice is to make $k$ adaptive: at high temperatures we remove more vertices (up to $|C|/4$) to encourage broad exploration. We set k=1 for fine-grained exploitation at low temperature.
-    \item \emph{Repair}: Usually, after removing a vertex, there are many uncovered edges. We employ a greedy repair procedure that iteratively picks the vertex that covers the maximum number of uncovered edges and includes it in the candidate cover until the cover is valid again.
+  \item \emph{Perturb}: We randomly delete $k$ vertices from the current cover $C$. An important design choice is to make $k$ adaptive: at high temperatures we remove more vertices (up to $|C|/4$) to encourage broad exploration. We set k=1 for fine-grained exploitation at low temperature.
+  \item \emph{Repair}: Usually, after removing a vertex, there are many uncovered edges. We employ a greedy repair procedure that iteratively picks the vertex that covers the maximum number of uncovered edges and includes it in the candidate cover until the cover is valid again.
 \end{enumerate}
 
-\paragraph{Acceptance Rule and Cooling Schedule.} 
-Set $\Delta = |C_{\text{cand}}| - |C|$. If $\Delta \le 0$ (a move that improves or does not change the cost), we always accept the candidate. If $\Delta > 0$ we accept the worse solution with a probability $e^{-\Delta / T}$. 
-Our cooling schedule is to multiply the temperature by a cooling rate $ \alpha = 0.995 $ after each epoch. Each epoch is run for $\max(10,n/10)$ iterations to allow the system to equilibrate at the current temperature. 
+\paragraph{Acceptance Rule and Cooling Schedule.}
+Set $\Delta = |C_{\text{cand}}| - |C|$. If $\Delta \le 0$ (a move that improves or does not change the cost), we always accept the candidate. If $\Delta > 0$ we accept the worse solution with a probability $e^{-\Delta / T}$.
+Our cooling schedule is to multiply the temperature by a cooling rate $ \alpha = 0.995 $ after each epoch. Each epoch is run for $\max(10,n/10)$ iterations to allow the system to equilibrate at the current temperature.
 
-\paragraph{Reheating.} 
+\paragraph{Reheating.}
 A reheating mechanism was used to prevent the search from being trapped in deep local minima after the temperature reaches zero. In case $T$ drops below a minimum threshold ($T_{\min} = 0.01$), then we reset $T$ to its initial value and revert the current solution to the global best cover found so far.
 
 \begin{algorithm}[t]
-\SetAlgoLined
-\DontPrintSemicolon
-\KwIn{Graph $G=(V,E)$, cutoff $\tau$, seed $s$.}
-\KwOut{Vertex cover $C^*$ and a trace of improvements.}
-$C \leftarrow \textsc{ApproxVertexCover}(G)$\;
-$C^* \leftarrow C$;\quad $T \leftarrow T_{init} \leftarrow |C| \cdot 0.5$;\quad $T_{min} \leftarrow 0.01$;\quad $\alpha \leftarrow 0.995$\;
-$steps \leftarrow \max(10, \lfloor |V|/10 \rfloor)$;\quad $trace \leftarrow [(\textsc{Elapsed}(), |C^*|)]$\;
-\While{$\textsc{Elapsed}() < \tau$}{
-    \lIf{$T \le T_{min}$}{$T \leftarrow T_{init}$;\quad $C \leftarrow C^*$}
-    \For{$i = 1$ \KwTo $steps$}{
-        \lIf{$\textsc{Elapsed}() \ge \tau$}{break}
-        $k \leftarrow \max\!\left(1,\;\min\!\left(\left\lfloor \frac{T}{0.1\cdot|C|+\varepsilon} \right\rfloor,\;\max(1,\lfloor |C|/4\rfloor)\right)\right)$\;
-        $C_{cand} \leftarrow \textsc{Repair}\!\left(G,\; C \setminus \text{sample}(C, k)\right)$\;
-        $\Delta \leftarrow |C_{cand}| - |C|$\;
-        \If{$\Delta \le 0$ \textbf{or} $\textit{rand}() < e^{-\Delta/T}$}{
-            $C \leftarrow C_{cand}$\;
-        }
-        \lIf{$|C| < |C^*|$}{$C^* \leftarrow C$;\quad append $(\textsc{Elapsed}(), |C^*|)$ to $trace$}
-    }
-    $T \leftarrow T \cdot \alpha$\;
-}
-\Return $C^*,\; trace$\;
-\BlankLine
-\SetKwFunction{FRepair}{Repair}
-\SetKwProg{Fn}{Function}{:}{}
-\Fn{\FRepair{$G, C$}}{
+  \SetAlgoLined
+  \DontPrintSemicolon
+  \KwIn{Graph $G=(V,E)$, cutoff $\tau$, seed $s$.}
+  \KwOut{Vertex cover $C^*$ and a trace of improvements.}
+  $C \leftarrow \textsc{ApproxVertexCover}(G)$\;
+  $C^* \leftarrow C$;\quad $T \leftarrow T_{init} \leftarrow |C| \cdot 0.5$;\quad $T_{min} \leftarrow 0.01$;\quad $\alpha \leftarrow 0.995$\;
+  $steps \leftarrow \max(10, \lfloor |V|/10 \rfloor)$;\quad $trace \leftarrow [(\textsc{Elapsed}(), |C^*|)]$\;
+  \While{$\textsc{Elapsed}() < \tau$}{
+  \lIf{$T \le T_{min}$}{$T \leftarrow T_{init}$;\quad $C \leftarrow C^*$}
+  \For{$i = 1$ \KwTo $steps$}{
+  \lIf{$\textsc{Elapsed}() \ge \tau$}{break}
+  $k \leftarrow \max\!\left(1,\;\min\!\left(\left\lfloor \frac{T}{0.1\cdot|C|+\varepsilon} \right\rfloor,\;\max(1,\lfloor |C|/4\rfloor)\right)\right)$\;
+  $C_{cand} \leftarrow \textsc{Repair}\!\left(G,\; C \setminus \text{sample}(C, k)\right)$\;
+  $\Delta \leftarrow |C_{cand}| - |C|$\;
+  \If{$\Delta \le 0$ \textbf{or} $\textit{rand}() < e^{-\Delta/T}$}{
+    $C \leftarrow C_{cand}$\;
+  }
+  \lIf{$|C| < |C^*|$}{$C^* \leftarrow C$;\quad append $(\textsc{Elapsed}(), |C^*|)$ to $trace$}
+  }
+  $T \leftarrow T \cdot \alpha$\;
+  }
+  \Return $C^*,\; trace$\;
+  \BlankLine
+  \SetKwFunction{FRepair}{Repair}
+  \SetKwProg{Fn}{Function}{:}{}
+  \Fn{\FRepair{$G, C$}}{
     $U \leftarrow \{(u,v)\in E \mid u\notin C \land v\notin C\}$\;
     \While{$U \neq \emptyset$}{
-        $v^* \leftarrow \text{random choice from } \arg\max_{v}\;|\{(u,w)\in U \mid v\in\{u,w\}\}|$\;
-        $C \leftarrow C \cup \{v^*\}$;\quad $U \leftarrow \{(u,v)\in U \mid v^*\notin\{u,v\}\}$\;
+      $v^* \leftarrow \text{random choice from } \arg\max_{v}\;|\{(u,w)\in U \mid v\in\{u,w\}\}|$\;
+      $C \leftarrow C \cup \{v^*\}$;\quad $U \leftarrow \{(u,v)\in U \mid v^*\notin\{u,v\}\}$\;
     }
     \Return $C$\;
-}
-\caption{Simulated Annealing for MVC.}
-\label{alg:ls1}
+  }
+  \caption{Simulated Annealing for MVC.}
+  \label{alg:ls1}
 \end{algorithm}
 
 
 
 \subsection{Local Search 2}
-\paragraph{Search Framework.} Local Search 2 implements a Genetic 
-Algorithm (GA) designed to evolve a population of feasible vertex 
-covers. The algorithm maintains a population size $P$ (scaled 
-between 10 and 40 based on graph size) and iteratively produces new 
-generations through selection, crossover, and mutation. Unlike the 
-point-based trajectory of LS1, this framework exploits the global 
-graph structure by maintaining multiple candidate solutions 
-simultaneously, preventing the search from becoming trapped in 
+\paragraph{Search Framework.} Local Search 2 implements a Genetic
+Algorithm (GA) designed to evolve a population of feasible vertex
+covers. The algorithm maintains a population size $P$ (scaled
+between 10 and 40 based on graph size) and iteratively produces new
+generations through selection, crossover, and mutation. Unlike the
+point-based trajectory of LS1, this framework exploits the global
+graph structure by maintaining multiple candidate solutions
+simultaneously, preventing the search from becoming trapped in
 narrow local optima.
 
-\paragraph{Neighborhood and Recombination.} The search navigates the 
-solution space primarily through an \emph{Intersection Crossover} 
-operator. Offspring are created by taking the intersection of two 
-parent sets, $C_{child} = C_{p1} \cap C_{p2}$. This operation 
-inherits vertices that both parents agree are important. To 
-introduce stochastic diversity (mutation), we randomly drop a 
-fraction of vertices (10\%) from the resulting child. Because 
-intersection and mutation often result in an invalid cover, we 
-employ a \emph{Randomized Greedy Repair} step. This heuristic 
-identifies uncovered edges and iteratively adds the vertex with the 
-highest residual degree, using random tie-breaking to ensure 
+\paragraph{Neighborhood and Recombination.} The search navigates the
+solution space primarily through an \emph{Intersection Crossover}
+operator. Offspring are created by taking the intersection of two
+parent sets, $C_{child} = C_{p1} \cap C_{p2}$. This operation
+inherits vertices that both parents agree are important. To
+introduce stochastic diversity (mutation), we randomly drop a
+fraction of vertices (10\%) from the resulting child. Because
+intersection and mutation often result in an invalid cover, we
+employ a \emph{Randomized Greedy Repair} step. This heuristic
+identifies uncovered edges and iteratively adds the vertex with the
+highest residual degree, using random tie-breaking to ensure
 explorative diversity.
 
-\paragraph{Acceptance Rule.} We use tournament selection with a size 
-of $k=3$ to select parents, ensuring a consistent selection 
-pressure toward smaller covers. The population transition follows an 
-elitist model: the top $10\%$ of the current population is 
-preserved automatically, while the remainder is replaced by new 
-offspring. This ensures that the global best solution is never lost 
+\paragraph{Acceptance Rule.} We use tournament selection with a size
+of $k=3$ to select parents, ensuring a consistent selection
+pressure toward smaller covers. The population transition follows an
+elitist model: the top $10\%$ of the current population is
+preserved automatically, while the remainder is replaced by new
+offspring. This ensures that the global best solution is never lost
 while allowing the population to evolve toward the optimum.
 
-\paragraph{Parameters.} The implementation dynamically adjusts 
-population size based on $n$, utilizes a mutation rate of $0.1$, 
-and maintains an elite set of size $\max(1, P/10)$. The randomized 
-greedy repair is triggered for every offspring to maintain the 
+\paragraph{Parameters.} The implementation dynamically adjusts
+population size based on $n$, utilizes a mutation rate of $0.1$,
+and maintains an elite set of size $\max(1, P/10)$. The randomized
+greedy repair is triggered for every offspring to maintain the
 feasibility invariant.
 
-\paragraph{Comparison to LS1.} The fundamental difference between 
-LS2 and LS1 is the mechanism of information exchange. LS1 (SA) 
-relies on local bit-flips and probabilistic uphill moves to escape 
-local minima. In contrast, LS2 uses crossover to combine successful 
-structural features from different individuals. By using the 
-intersection of two fit parents, LS2 identifies "backbone" vertices 
-that are common to high-quality covers, a global perspective that 
+\paragraph{Comparison to LS1.} The fundamental difference between
+LS2 and LS1 is the mechanism of information exchange. LS1 (SA)
+relies on local bit-flips and probabilistic uphill moves to escape
+local minima. In contrast, LS2 uses crossover to combine successful
+structural features from different individuals. By using the
+intersection of two fit parents, LS2 identifies "backbone" vertices
+that are common to high-quality covers, a global perspective that
 single-point searches typically lack.
 
 \begin{algorithm}[t]
-\SetAlgoLined
-\DontPrintSemicolon
-\KwIn{Graph $G=(V,E)$, cutoff $\tau$, seed $s$.}
-\KwOut{Vertex cover $C^*$ and a trace of improvements.}
-$\textsc{Seed}(s)$;\quad $P \leftarrow \max(10, \min(40, |V|/2))$;\quad $p_m \leftarrow 0.1$\;
-$E \leftarrow \max(1, \lfloor P/10 \rfloor)$;\quad $k \leftarrow 3$;\quad $trace \leftarrow []$\;
-$C_{init} \leftarrow \textsc{ApproxVertexCover}(G)$\;
-$C^* \leftarrow C_{init}$;\quad $Pop \leftarrow [C_{init}]$\;
-\For{$i = 1$ \KwTo $P-1$}{
-    $C_{rand} \leftarrow \textsc{Repair}(G, \emptyset)$\;
-    $Pop.\text{append}(C_{rand})$\;
-    \lIf{$|C_{rand}| < |C^*|$}{$C^* \leftarrow C_{rand}$}
-}
-append $(\textsc{Elapsed}(), |C^*|)$ to $trace$\;
-\While{$\textsc{Elapsed}() < \tau$}{
-    $Pop \leftarrow \text{sort } Pop \text{ by cardinality ascending}$\;
-    $NewPop \leftarrow Pop[1 \dots E]$\;
-    \While{$|NewPop| < P$}{
-        \lIf{$\textsc{Elapsed}() \ge \tau$}{break}
-        $p_1 \leftarrow \textsc{TournamentSelect}(Pop, k)$\;
-        $p_2 \leftarrow \textsc{TournamentSelect}(Pop, k)$\;
-        $C_{child} \leftarrow p_1 \cap p_2$\;
-        \If{$C_{child} \neq \emptyset$}{
-            $M \leftarrow \text{sample}(C_{child}, \lfloor |C_{child}| \cdot p_m \rfloor)$\;
-            $C_{child} \leftarrow C_{child} \setminus M$\;
-        }
-        $C_{child} \leftarrow \textsc{Repair}(G, C_{child})$\;
-        $NewPop.\text{append}(C_{child})$\;
-        \If{$|C_{child}| < |C^*|$}{
-            $C^* \leftarrow C_{child}$;\quad append $(\textsc{Elapsed}(), |C^*|)$ to $trace$
-        }
-    }
-    $Pop \leftarrow NewPop$\;
-}
-\Return $C^*,\; trace$\;
-\caption{Genetic Algorithm for MVC.}
-\label{alg:ls2}
+  \SetAlgoLined
+  \DontPrintSemicolon
+  \KwIn{Graph $G=(V,E)$, cutoff $\tau$, seed $s$.}
+  \KwOut{Vertex cover $C^*$ and a trace of improvements.}
+  $\textsc{Seed}(s)$;\quad $P \leftarrow \max(10, \min(40, |V|/2))$;\quad $p_m \leftarrow 0.1$\;
+  $E \leftarrow \max(1, \lfloor P/10 \rfloor)$;\quad $k \leftarrow 3$;\quad $trace \leftarrow []$\;
+  $C_{init} \leftarrow \textsc{ApproxVertexCover}(G)$\;
+  $C^* \leftarrow C_{init}$;\quad $Pop \leftarrow [C_{init}]$\;
+  \For{$i = 1$ \KwTo $P-1$}{
+  $C_{rand} \leftarrow \textsc{Repair}(G, \emptyset)$\;
+  $Pop.\text{append}(C_{rand})$\;
+  \lIf{$|C_{rand}| < |C^*|$}{$C^* \leftarrow C_{rand}$}
+  }
+  append $(\textsc{Elapsed}(), |C^*|)$ to $trace$\;
+  \While{$\textsc{Elapsed}() < \tau$}{
+  $Pop \leftarrow \text{sort } Pop \text{ by cardinality ascending}$\;
+  $NewPop \leftarrow Pop[1 \dots E]$\;
+  \While{$|NewPop| < P$}{
+  \lIf{$\textsc{Elapsed}() \ge \tau$}{break}
+  $p_1 \leftarrow \textsc{TournamentSelect}(Pop, k)$\;
+  $p_2 \leftarrow \textsc{TournamentSelect}(Pop, k)$\;
+  $C_{child} \leftarrow p_1 \cap p_2$\;
+  \If{$C_{child} \neq \emptyset$}{
+    $M \leftarrow \text{sample}(C_{child}, \lfloor |C_{child}| \cdot p_m \rfloor)$\;
+    $C_{child} \leftarrow C_{child} \setminus M$\;
+  }
+  $C_{child} \leftarrow \textsc{Repair}(G, C_{child})$\;
+  $NewPop.\text{append}(C_{child})$\;
+  \If{$|C_{child}| < |C^*|$}{
+  $C^* \leftarrow C_{child}$;\quad append $(\textsc{Elapsed}(), |C^*|)$ to $trace$
+  }
+  }
+  $Pop \leftarrow NewPop$\;
+  }
+  \Return $C^*,\; trace$\;
+  \caption{Genetic Algorithm for MVC.}
+  \label{alg:ls2}
 \end{algorithm}
 \section{Empirical Evaluation}
 \label{sec:eval}
@@ -538,17 +538,17 @@ append $(\textsc{Elapsed}(), |C^*|)$ to $trace$\;
 The experiments were implemented in Python 3.10.12 using the Visual Studio Code IDE within an Ubuntu 24.04.4 LTS (WSL 2) environment. Table~\ref{tab:hardware} summarizes the hardware specifications used for the evaluation.
 
 \begin{table}[h]
-\centering
-\caption{Hardware specifications of the experimental workstation.}
-\label{tab:hardware}
-\begin{tabular}{ll}
-\hline
-\textbf{Component} & \textbf{Specification} \\ \hline
-CPU & Intel Core Ultra 7 265 \\
-RAM & 47 GB \\
-GPU & NVIDIA RTX 2000 Ada Generation \\
-OS & Ubuntu 24.04.4 LTS (WSL 2) \\ \hline
-\end{tabular}
+  \centering
+  \caption{Hardware specifications of the experimental workstation.}
+  \label{tab:hardware}
+  \begin{tabular}{ll}
+    \hline
+    \textbf{Component} & \textbf{Specification}         \\ \hline
+    CPU                & Intel Core Ultra 7 265         \\
+    RAM                & 47 GB                          \\
+    GPU                & NVIDIA RTX 2000 Ada Generation \\
+    OS                 & Ubuntu 24.04.4 LTS (WSL 2)     \\ \hline
+  \end{tabular}
 \end{table}
 
 \subsection{Comprehensive Results Table}
@@ -557,53 +557,53 @@ OS & Ubuntu 24.04.4 LTS (WSL 2) \\ \hline
 Table~\ref{tab:results} summarizes the experimental Results for Vertex Cover Algorithms.
 
 \begin{table*}[t]
-\centering
-\small
-\caption{Experimental Results for Vertex Cover Algorithms.} 
-\label{tab:results}
-\begin{tabular}{l|ccc|ccc|ccc|ccc}
-\toprule
- & \multicolumn{3}{c|}{Branch and Bound} & \multicolumn{3}{c|}{Approx} & \multicolumn{3}{c|}{LS1} & \multicolumn{3}{c}{LS2} \\
-\cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10} \cmidrule(lr){11-13}
-Instance & Time(s) & Size & RelErr & Time(s) & Size & RelErr & Time(s) & Size & RelErr & Time(s) & Size & RelErr \\
-\midrule
-test1 & 0.00 & 2 & 0.00 & 0.00 & 2.0 & 0.00 & 2.00 & 2.00 & 0.00 & 2.00 & 2.00 & 0.0000 \\
-test2 & 0.00 & 3 & 0.00 & 0.00 & 6.0 & 1.00 & 2.00 & 3.00 & 0.00 & 2.00 & 3.00 & 0.0000 \\
-test3 & 0.00 & 5 & 0.00 & 0.00 & 8.0 & 0.60 & 2.00 & 5.00 & 0.00 & 2.00 & 5.00 & 0.0000 \\
-test4 & 0.00 & 7 & 0.00 & 0.00 & 12.0 & 0.71 & 2.00 & 7.00 & 0.00 & 2.00 & 7.00 & 0.0000 \\
-test5 & 0.00 & 7 & 0.00 & 0.00 & 10.0 & 0.43 & 2.00 & 7.00 & 0.00 & 2.00 & 7.00 & 0.0000 \\
-small1 & 0.00 & 21 & 0.00 & 0.00 & 24.0 & 0.14 & 2.00 & 21.00 & 0.00 & 2.00 & 21.00 & 0.0000 \\
-small2 & 0.00 & 20 & 0.00 & 0.00 & 24.0 & 0.20 & 2.00 & 20.00 & 0.00 & 2.00 & 20.00 & 0.0000 \\
-small3 & 0.00 & 20 & 0.00 & 0.00 & 24.0 & 0.20 & 2.00 & 20.00 & 0.00 & 2.00 & 20.00 & 0.0000 \\
-small4 & 0.00 & 20 & 0.00 & 0.00 & 24.0 & 0.20 & 2.00 & 20.00 & 0.00 & 2.00 & 20.00 & 0.0000 \\
-small5 & 0.00 & 21 & 0.00 & 0.00 & 24.0 & 0.14 & 2.00 & 21.00 & 0.00 & 2.00 & 21.00 & 0.0000 \\
-small6 & 0.00 & 20 & 0.00 & 0.00 & 24.0 & 0.20 & 2.00 & 20.00 & 0.00 & 2.00 & 20.00 & 0.0000 \\
-small7 & 0.00 & 20 & 0.00 & 0.00 & 24.0 & 0.20 & 2.00 & 20.00 & 0.00 & 2.00 & 20.00 & 0.0000 \\
-small8 & 0.00 & 19 & 0.00 & 0.00 & 24.0 & 0.26 & 2.00 & 19.00 & 0.00 & 2.00 & 19.00 & 0.0000 \\
-small9 & 0.00 & 21 & 0.00 & 0.00 & 24.0 & 0.14 & 2.00 & 21.00 & 0.00 & 2.00 & 21.00 & 0.0000 \\
-small10 & 0.00 & 21 & 0.00 & 0.00 & 24.0 & 0.14 & 2.00 & 21.00 & 0.00 & 2.00 & 21.00 & 0.0000 \\
-small11 & 0.00 & 21 & 0.00 & 0.00 & 24.0 & 0.14 & 2.00 & 21.00 & 0.00 & 2.00 & 21.00 & 0.0000 \\
-small12 & 0.00 & 20 & 0.00 & 0.00 & 24.0 & 0.20 & 2.00 & 20.00 & 0.00 & 2.00 & 20.00 & 0.0000 \\
-small13 & 0.00 & 21 & 0.00 & 0.00 & 24.0 & 0.14 & 2.00 & 21.00 & 0.00 & 2.00 & 21.00 & 0.0000 \\
-small14 & 0.00 & 21 & 0.00 & 0.00 & 24.0 & 0.14 & 2.00 & 21.00 & 0.00 & 2.00 & 21.00 & 0.0000 \\
-small15 & 0.00 & 21 & 0.00 & 0.00 & 24.0 & 0.14 & 2.00 & 21.00 & 0.00 & 2.00 & 21.00 & 0.0000 \\
-small16 & 0.00 & 20 & 0.00 & 0.00 & 24.0 & 0.20 & 2.00 & 20.00 & 0.00 & 2.00 & 20.00 & 0.0000 \\
-small17 & 0.00 & 14 & 0.00 & 0.00 & 22.0 & 0.57 & 2.00 & 14.00 & 0.00 & 2.00 & 14.00 & 0.0000 \\
-small18 & 9.06 & 158 & 0.00 & 0.00 & 194.0 & 0.23 & 2.00 & 158.00 & 0.00 & 2.00 & 158.00 & 0.0000 \\
-large1 & 0.09 & 3303 & 0.00 & 0.02 & 5684.0 & 0.72 & 60.00 & 3303.15 & 0.00 & 62.71 & 3308.15 & 0.0016 \\
-large2 & 2.41 & 594 & 0.00 & 0.00 & 814.0 & 0.37 & 60.00 & 594.00 & 0.00 & 60.00 & 594.45 & 0.0008 \\
-large3 & 21.55 & 2203 & 0.00 & 0.00 & 3736.0 & 0.70 & 60.00 & 2203.40 & 0.00 & 60.01 & 2210.35 & 0.0033 \\
-large4 & 60.00 & 3926 & 0.00 & 0.00 & 5678.0 & 0.45 & 60.00 & 3926.05 & 0.00 & 61.63 & 3940.35 & 0.0037 \\
-large5 & 60.01 & 1008 & 0.01 & 0.18 & 2000.0 & 1.00 & 60.01 & 1000.00 & 0.00 & 60.57 & 1029.80 & 0.0319 \\
-large6 & 0.96 & 980 & 0.00 & 0.18 & 1960.0 & 1.00 & 60.01 & 980.00 & 0.00 & 60.59 & 980.00 & 0.0000 \\
-large7 & 60.00 & 1938 & 0.01 & 0.06 & 1990.0 & 0.04 & 60.00 & 1929.00 & 0.01 & 60.03 & 1984.80 & 0.0343 \\
-large8 & 60.00 & 1818 & 0.02 & 0.04 & 1972.0 & 0.10 & 60.00 & 1803.45 & 0.01 & 60.05 & 1826.85 & 0.0252 \\
-large9 & 60.00 & 791 & 0.00 & 0.07 & 800.0 & 0.01 & 60.00 & 791.45 & 0.00 & 60.10 & 793.10 & 0.0027 \\
-large10 & 60.00 & 933 & 0.00 & 0.09 & 1000.0 & 0.07 & 60.00 & 933.30 & 0.00 & 60.07 & 998.00 & 0.0697 \\
-large11 & 60.00 & 990 & 0.00 & 0.12 & 1000.0 & 0.01 & 60.00 & 990.85 & 0.00 & 60.12 & 998.10 & 0.0082 \\
-large12 & 60.00 & 1439 & 0.00 & 0.18 & 1500.0 & 0.04 & 60.01 & 1441.60 & 0.00 & 60.64 & 1498.00 & 0.0410 \\
-\bottomrule
-\end{tabular}
+  \centering
+  \small
+  \caption{Experimental Results for Vertex Cover Algorithms.}
+  \label{tab:results}
+  \begin{tabular}{l|ccc|ccc|ccc|ccc}
+    \toprule
+             & \multicolumn{3}{c|}{Branch and Bound} & \multicolumn{3}{c|}{Approx} & \multicolumn{3}{c|}{LS1} & \multicolumn{3}{c}{LS2}                                                                             \\
+    \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10} \cmidrule(lr){11-13}
+    Instance & Time(s)                               & Size                        & RelErr                   & Time(s)                 & Size   & RelErr & Time(s) & Size    & RelErr & Time(s) & Size    & RelErr \\
+    \midrule
+    test1    & 0.00                                  & 2                           & 0.00                     & 0.00                    & 2.0    & 0.00   & 2.00    & 2.00    & 0.00   & 2.00    & 2.00    & 0.0000 \\
+    test2    & 0.00                                  & 3                           & 0.00                     & 0.00                    & 6.0    & 1.00   & 2.00    & 3.00    & 0.00   & 2.00    & 3.00    & 0.0000 \\
+    test3    & 0.00                                  & 5                           & 0.00                     & 0.00                    & 8.0    & 0.60   & 2.00    & 5.00    & 0.00   & 2.00    & 5.00    & 0.0000 \\
+    test4    & 0.00                                  & 7                           & 0.00                     & 0.00                    & 12.0   & 0.71   & 2.00    & 7.00    & 0.00   & 2.00    & 7.00    & 0.0000 \\
+    test5    & 0.00                                  & 7                           & 0.00                     & 0.00                    & 10.0   & 0.43   & 2.00    & 7.00    & 0.00   & 2.00    & 7.00    & 0.0000 \\
+    small1   & 0.00                                  & 21                          & 0.00                     & 0.00                    & 24.0   & 0.14   & 2.00    & 21.00   & 0.00   & 2.00    & 21.00   & 0.0000 \\
+    small2   & 0.00                                  & 20                          & 0.00                     & 0.00                    & 24.0   & 0.20   & 2.00    & 20.00   & 0.00   & 2.00    & 20.00   & 0.0000 \\
+    small3   & 0.00                                  & 20                          & 0.00                     & 0.00                    & 24.0   & 0.20   & 2.00    & 20.00   & 0.00   & 2.00    & 20.00   & 0.0000 \\
+    small4   & 0.00                                  & 20                          & 0.00                     & 0.00                    & 24.0   & 0.20   & 2.00    & 20.00   & 0.00   & 2.00    & 20.00   & 0.0000 \\
+    small5   & 0.00                                  & 21                          & 0.00                     & 0.00                    & 24.0   & 0.14   & 2.00    & 21.00   & 0.00   & 2.00    & 21.00   & 0.0000 \\
+    small6   & 0.00                                  & 20                          & 0.00                     & 0.00                    & 24.0   & 0.20   & 2.00    & 20.00   & 0.00   & 2.00    & 20.00   & 0.0000 \\
+    small7   & 0.00                                  & 20                          & 0.00                     & 0.00                    & 24.0   & 0.20   & 2.00    & 20.00   & 0.00   & 2.00    & 20.00   & 0.0000 \\
+    small8   & 0.00                                  & 19                          & 0.00                     & 0.00                    & 24.0   & 0.26   & 2.00    & 19.00   & 0.00   & 2.00    & 19.00   & 0.0000 \\
+    small9   & 0.00                                  & 21                          & 0.00                     & 0.00                    & 24.0   & 0.14   & 2.00    & 21.00   & 0.00   & 2.00    & 21.00   & 0.0000 \\
+    small10  & 0.00                                  & 21                          & 0.00                     & 0.00                    & 24.0   & 0.14   & 2.00    & 21.00   & 0.00   & 2.00    & 21.00   & 0.0000 \\
+    small11  & 0.00                                  & 21                          & 0.00                     & 0.00                    & 24.0   & 0.14   & 2.00    & 21.00   & 0.00   & 2.00    & 21.00   & 0.0000 \\
+    small12  & 0.00                                  & 20                          & 0.00                     & 0.00                    & 24.0   & 0.20   & 2.00    & 20.00   & 0.00   & 2.00    & 20.00   & 0.0000 \\
+    small13  & 0.00                                  & 21                          & 0.00                     & 0.00                    & 24.0   & 0.14   & 2.00    & 21.00   & 0.00   & 2.00    & 21.00   & 0.0000 \\
+    small14  & 0.00                                  & 21                          & 0.00                     & 0.00                    & 24.0   & 0.14   & 2.00    & 21.00   & 0.00   & 2.00    & 21.00   & 0.0000 \\
+    small15  & 0.00                                  & 21                          & 0.00                     & 0.00                    & 24.0   & 0.14   & 2.00    & 21.00   & 0.00   & 2.00    & 21.00   & 0.0000 \\
+    small16  & 0.00                                  & 20                          & 0.00                     & 0.00                    & 24.0   & 0.20   & 2.00    & 20.00   & 0.00   & 2.00    & 20.00   & 0.0000 \\
+    small17  & 0.00                                  & 14                          & 0.00                     & 0.00                    & 22.0   & 0.57   & 2.00    & 14.00   & 0.00   & 2.00    & 14.00   & 0.0000 \\
+    small18  & 9.06                                  & 158                         & 0.00                     & 0.00                    & 194.0  & 0.23   & 2.00    & 158.00  & 0.00   & 2.00    & 158.00  & 0.0000 \\
+    large1   & 0.09                                  & 3303                        & 0.00                     & 0.02                    & 5684.0 & 0.72   & 60.00   & 3303.15 & 0.00   & 62.71   & 3308.15 & 0.0016 \\
+    large2   & 2.41                                  & 594                         & 0.00                     & 0.00                    & 814.0  & 0.37   & 60.00   & 594.00  & 0.00   & 60.00   & 594.45  & 0.0008 \\
+    large3   & 21.55                                 & 2203                        & 0.00                     & 0.00                    & 3736.0 & 0.70   & 60.00   & 2203.40 & 0.00   & 60.01   & 2210.35 & 0.0033 \\
+    large4   & 60.00                                 & 3926                        & 0.00                     & 0.00                    & 5678.0 & 0.45   & 60.00   & 3926.05 & 0.00   & 61.63   & 3940.35 & 0.0037 \\
+    large5   & 60.01                                 & 1008                        & 0.01                     & 0.18                    & 2000.0 & 1.00   & 60.01   & 1000.00 & 0.00   & 60.57   & 1029.80 & 0.0319 \\
+    large6   & 0.96                                  & 980                         & 0.00                     & 0.18                    & 1960.0 & 1.00   & 60.01   & 980.00  & 0.00   & 60.59   & 980.00  & 0.0000 \\
+    large7   & 60.00                                 & 1938                        & 0.01                     & 0.06                    & 1990.0 & 0.04   & 60.00   & 1929.00 & 0.01   & 60.03   & 1984.80 & 0.0343 \\
+    large8   & 60.00                                 & 1818                        & 0.02                     & 0.04                    & 1972.0 & 0.10   & 60.00   & 1803.45 & 0.01   & 60.05   & 1826.85 & 0.0252 \\
+    large9   & 60.00                                 & 791                         & 0.00                     & 0.07                    & 800.0  & 0.01   & 60.00   & 791.45  & 0.00   & 60.10   & 793.10  & 0.0027 \\
+    large10  & 60.00                                 & 933                         & 0.00                     & 0.09                    & 1000.0 & 0.07   & 60.00   & 933.30  & 0.00   & 60.07   & 998.00  & 0.0697 \\
+    large11  & 60.00                                 & 990                         & 0.00                     & 0.12                    & 1000.0 & 0.01   & 60.00   & 990.85  & 0.00   & 60.12   & 998.10  & 0.0082 \\
+    large12  & 60.00                                 & 1439                        & 0.00                     & 0.18                    & 1500.0 & 0.04   & 60.01   & 1441.60 & 0.00   & 60.64   & 1498.00 & 0.0410 \\
+    \bottomrule
+  \end{tabular}
 \end{table*}
 
 
@@ -717,10 +717,39 @@ The running time box plots for the LS2 algorithm are shown in Figures~\ref{fig:b
 
 \section{Discussion}
 \label{sec:discussion}
-% Comparative analysis: runtime, solution quality, scalability, theoretical vs. empirical behavior.
+
+The empirical results in Table~\ref{tab:results} and the distributions above display clear trade-offs between the four algorithms, directly reflecting their underlying mechanics.
+
+
+\subsection{Runtime and Scalability}
+The 2-approximation algorithm is the fastest algorithm, since its complexity is bounded by O(n+m). It finishes in fractions of a second even on the densest graphs.
+
+The Branch-and-Bound solver scales perfectly on the \texttt{test} and \texttt{small} datasets and finds optimal solutions in less than $0.01\,\text{s}$ (except for \texttt{small18} which takes $9.06\,\text{s}$). However, its exponential worst-case running time is revealed on the \texttt{large} datasets, where it often reaches the $60\,\text{s}$ cutoff.
+
+The two local search algorithms are run continuously as anytime algorithms. While LS1 can do many iterations per second, LS2 has scalability problems on dense graphs. The step-function behavior observed in the LS2 QRTDs (Figure~\ref{fig:qrtd-ls2-large12}) indicates that the computation of the randomized greedy repair for an entire population is a major bottleneck on dense graphs, restricting the number of generations it can perform within the cutoff.
+
+\subsection{Solution Quality}
+The BnB is optimal and when it does not time out it achieves a relative error of $0.00$.
+
+On the other hand, the Approximation algorithm sacrifices quality for speed, producing relative errors as high as $1.00$.
+
+LS1 is better than LS2 for all heuristics consistently. The results in Table~\ref{tab:results} show that LS1 obtains almost zero relative errors for nearly all \texttt{large} instances.
+
+LS2 meets the $5\%$ and $10\%$ error targets, but cannot achieve the tight $1\%$ target on \texttt{large12} because the population repair mechanism drives the algorithm into a limited set of structural local optima.
+
+\subsection{Alignment with Theoretical Expectations}
+The observation is exactly in line with the theoretical guarantees. The 2-approximation algorithm is mathematically guaranteed to return a cover no worse than twice the size of the optimal cover. This worst case scenario is illustrated perfectly on the constructed dense bipartite graphs (\texttt{large5} and \texttt{large6}) where it leads to a relative error of exactly $1.00$.
+
+Likewise, the theoretical power of the kernelization for the LP-relaxation is empirically verified. The bipartite structure of \texttt{large6} makes the LP relaxation fully integral and the Nemhauser-Trotter kernel solves the graph completely in preprocessing, so BnB finishes in only $0.96\,\text{s}$. Finally, the intrinsic limitations of exact vs. heuristic methods become clear: BnB cannot scale on generic dense graphs due to NP-hardness, while SA (LS1) exploits the tradeoff successfully by using probabilistic uphill moves to find near-optimal covers long before an exact solver could complete its search tree.
+
 
 \section{Conclusion}
 \label{sec:conclusion}
+We studied the NP-complete Minimum Vertex Cover problem by applying four different algorithmic strategies: an exact Branch-and-Bound solver, a 2-approximation algorithm, and two local search heuristics (Simulated Annealing and a Genetic Algorithm).
+
+Our experimental results on 35 benchmark instances reveal a clear spectrum of computational trade-offs. The BnB solver is optimal and works well on small graphs or topologies that are amenable to LP kernelization. However, due to its exponential time complexity, the BnB solver is impractical for large and dense networks. At the other end of the spectrum, the 2-approximation algorithm gives instant results with a tight theoretical worst-case guarantee, but in general the worst practical solution quality. Among our heuristic approaches, Simulated Annealing (LS1) was very successful, as it quickly found near-optimal covers within tight time limits by fast iterations. In contrast, the Genetic Algorithm (LS2) struggled to scale on dense graphs due to the large computational overhead of maintaining and repairing a valid population of covers .
+
+In the end, there is no one algorithm that is the best for MVC. Mission-critical settings that require guaranteed optimality need exact methods such as BnB, while time-critical applications with huge data sets benefit from the nimbleness and anytime performance of single-state local search.
 
 \bibliographystyle{ACM-Reference-Format}
 \bibliography{references}
