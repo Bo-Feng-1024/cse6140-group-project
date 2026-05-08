@@ -32,3 +32,8 @@ report/sample-sigconf.tex
 spring2026_project.pdf
 Makefile
 test.py
+
+# Submission / intermediate zips
+CourseProject-code.zip
+ls1_approx.zip
+ls2_output.zip

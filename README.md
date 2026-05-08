@@ -6,7 +6,7 @@
 - Yihao Zhuang (yzhuang80@gatech.edu)
 
 ## Language
-Python 3.10+
+Python 3.10 (target: Gradescope's Python 3.10.12). No third-party libraries are required to run the solver — `matplotlib` / `numpy` are only used by the plotting scripts under `results/`.
 
 ## How to Run
 
@@ -54,14 +54,15 @@ data/
 mvc.py        # Main entry point (CLI parsing, dispatch)
 graph.py      # Graph class, I/O, vertex cover validation
 utils.py      # Output file writing (.sol, .trace), Timer
-bnb.py        # Branch and Bound (exact)
-approx.py     # 2-Approximation algorithm
-ls1.py        # Local Search variant 1 (TBD)
-ls2.py        # Local Search variant 2 (TBD)
-report/       # ACM sigconf LaTeX report
+bnb.py        # Branch and Bound (exact) — NT kernel + matching LB
+approx.py     # 2-Approximation (edge-pick)
+ls1.py        # Local Search 1 — Simulated Annealing
+ls2.py        # Local Search 2 — Genetic Algorithm
+report/       # ACM sigconf LaTeX report (report.pdf is the compiled artifact)
   report.tex
   references.bib
-notes/        # Project handout and Piazza posts
+results/      # Experiment outputs and plotting scripts (see below)
+notes/        # Project handout, meeting notes, experiment how-to
 ```
 
 ## Output Files
@@ -72,9 +73,45 @@ Each run produces:
 
 ## Algorithms
 
-| ID     | Category       | Status |
-|--------|---------------|--------|
-| BnB    | Exact (Branch & Bound) | TODO |
-| Approx | 2-Approximation       | TODO |
-| LS1    | Local Search 1        | TODO |
-| LS2    | Local Search 2        | TODO |
+| ID     | Category                          | File     | Status |
+|--------|-----------------------------------|----------|--------|
+| BnB    | Exact (Branch & Bound)            | `bnb.py` | Done — Nemhauser–Trotter LP kernel + matching lower bound + degree-1/2 reductions |
+| Approx | 2-Approximation                   | `approx.py` | Done — pick any uncovered edge, add both endpoints |
+| LS1    | Local Search — Simulated Annealing | `ls1.py` | Done — SA with k-vertex perturb + greedy repair + reheat |
+| LS2    | Local Search — Genetic Algorithm  | `ls2.py` | Done — tournament + intersection crossover + mutation + greedy repair |
+
+## Reproducing the Experiments
+
+`results/run_all.py` runs all four algorithms and writes the `.sol` / `.trace`
+files needed for the Canvas submission and the comprehensive table in the
+report. See `notes/experiments-howto.md` for full details.
+
+```bash
+# all 4 algorithms (BnB + Approx + 20 LS seeds + 600s × 20 LS seeds on large1/12)
+python3 results/run_all.py
+
+# subsets
+python3 results/run_all.py --algs BnB Approx
+python3 results/run_all.py --algs LS1 LS2
+python3 results/run_all.py --algs qrtd        # 600s × 20 seeds on large1/large12
+python3 results/run_all.py --summary          # rebuild CSV without rerunning
+```
+
+Outputs land under:
+
+```
+results/<alg>/<inst>_<alg>_<cutoff>[_<seed>].sol
+results/<alg>/<inst>_<alg>_<cutoff>[_<seed>].trace   # not for Approx
+results/<alg>/runs.csv                               # per-run rows
+results/comprehensive_summary.csv                    # cross-algorithm aggregate
+results/ls1/*.png, results/ls2/*.png                 # QRTD / SQD / box plots
+```
+
+## Compiling the Report
+
+```bash
+cd report
+pdflatex report.tex && bibtex report && pdflatex report.tex && pdflatex report.tex
+```
+
+The compiled `report/report.pdf` is the deliverable submitted to Canvas.
